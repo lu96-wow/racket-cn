@@ -56,8 +56,8 @@
   [let*-values 依次令多值]
   [letrec-values 递归令多值]
   [set! 赋值！]
-  [begin 开始]
-  [begin0 首先]
+  [begin 顺序求值]
+  [begin0 顺序求值返回首个值]
   [when 当]
   [unless 除非]
   [and 且]
@@ -71,7 +71,7 @@
   [syntax 语法]
 
   ;; ========== 续延与控制 ==========
-  [call/cc 调用/当前续延]
+  [call/cc 续延]
   [call-with-current-continuation 调用-当前续延]
   [call-with-composable-continuation 调用-可组合续延]
   [call-with-escape-continuation 调用-逃逸续延]
@@ -90,16 +90,16 @@
   [car 首]
   [cdr 尾]
   [pair? 对?]
-  [null 空]
-  [null? 空?]
+  [null 空值]
+  [null? 空值?]
   [list 列表]
   [list? 列表?]
   [list* 列表*]
   [length 长度]
   [append 拼接]
   [reverse 反转]
-  [member 成员?]
-  [assoc 关联]
+  [member 成员]
+  [assoc 关联查找]
   [caar 首首]
   [cadr 第二]
   [cdar 尾首]
@@ -114,8 +114,8 @@
   [foldr 右折叠]
   [for-each 遍历]
   [apply 应用]
-  [compose 组合]
-  [compose1 组合1]
+  [compose 函数组合]
+  [compose1 函数组合1]
   [values 多值]
 
   ;; ========== 数学 ==========
@@ -187,7 +187,7 @@
 
   ;; ========== 符号 ==========
   [symbol? 符号?]
-  [gensym 生成符号]
+  [gensym 生成唯一符号]
   [generate-temporaries 生成临时标识符]
 
   ;; ========== 关键字 ==========
@@ -247,9 +247,9 @@
 
   ;; ========== 输入输出 ==========
   [display 显示]
-  [displayln 显示ln]
+  [displayln 显示行]
   [print 打印]
-  [println 打印ln]
+  [println 打印行]
   [write 写出]
   [printf 格式化输出]
   [read 读取]
@@ -331,21 +331,21 @@
 
   ;; ========== 迭代/循环 ==========
   [for 循环]
-  [for* 多循环]
-  [for/list 循环列表]
-  [for*/list 多循环列表]
-  [for/vector 循环向量]
-  [for*/vector 多循环向量]
-  [for/and 循环且]
-  [for*/and 多循环且]
-  [for/or 循环或]
-  [for*/or 多循环或]
-  [for/first 循环首个]
-  [for*/first 多循环首个]
-  [for/last 循环末个]
-  [for*/last 多循环末个]
-  [for/fold 循环折叠]
-  [for*/fold 多循环折叠]
+  [for* 循环*]
+  [for/list 循环/列表]
+  [for*/list 循环*/列表]
+  [for/vector 循环/向量]
+  [for*/vector 循环*/向量]
+  [for/and 循环/且]
+  [for*/and 循环*/且]
+  [for/or 循环/或]
+  [for*/or 循环*/或]
+  [for/first 循环/首个]
+  [for*/first 循环*/首个]
+  [for/last 循环/末个]
+  [for*/last 循环*/末个]
+  [for/fold 循环/折叠]
+  [for*/fold 循环*/折叠]
   [for-each 遍历]
   [in-range 在范围]
   [in-list 在列表]
@@ -376,8 +376,8 @@
   [current-seconds 当前秒]
 
   ;; ========== 类型谓词 ==========
-  [void 空值]
-  [void? 空值?]
+  [void 空]
+  [void? 空?]
   )
   )
 ;; 4. 关键字函数中文包装（宏翻译 #:如果存在 → #:exists 等）
