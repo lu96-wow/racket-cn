@@ -7,9 +7,11 @@
 ;; 实际实现在 base-impl.rkt 中。
 ;; ============================================================
 
-(require "base-impl.rkt")
+(require "base-impl.rkt"
+         "module.rkt")
 
-(provide (all-from-out "base-impl.rkt"))
+(provide (all-from-out "base-impl.rkt")
+         (all-from-out "module.rkt"))
 
 ;; ============================================================
 ;; Reader 子模块 -- 支持 #lang racket-cn/base

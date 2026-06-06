@@ -6,6 +6,7 @@
 
 (require racket
          "base-impl.rkt"      ;; racket/base 全量
+         "module.rkt"         ;; require/provide 中文别名
          "class.rkt"          ;; racket/class
          "contract.rkt"       ;; racket/contract
          "date.rkt"           ;; racket/date
@@ -37,6 +38,7 @@
 ;; 中文子模块
 (provide
  (all-from-out "base-impl.rkt")
+ (all-from-out "module.rkt")
  (all-from-out "class.rkt")
  (all-from-out "contract.rkt")
  (all-from-out "date.rkt")

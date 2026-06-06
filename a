@@ -1,7 +1,0 @@
-(open-output-file "test.txt" #:exists 'truncate)
-
-(打开输入文件 "test.rkt" #:存在 '截断)
-
-(打开输入文件 "test.rkt" #:existe '截断)
-
-我的翻译思路是为每个这样的函数单独写中文宏,接受整个语法对象并匹配翻译

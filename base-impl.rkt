@@ -26,6 +26,8 @@
  #%top)
 
 ;; ============================================================
+;; 1.5 模块系统中文原语（require/provide 的别名）
+;; ============================================================
 ;; 2. 全部英文原语透传
 ;; ============================================================
 (provide (all-from-out racket/base))
@@ -61,7 +63,7 @@
   [and 且]
   [or 或]
   [not 非]
-  [quote 引用]
+  [quote 引述]
   [quasiquote 准引用]
   [unquote 反引用]
   [quasisyntax 准语法]
@@ -249,6 +251,7 @@
   [print 打印]
   [println 打印ln]
   [write 写出]
+  [printf 格式化输出]
   [read 读取]
   [read-line 读取-行]
   [read-string 读取-字符串]
@@ -273,8 +276,12 @@
   [make-directory 创建目录]
   [copy-file 复制文件]
   [path? 路径?]
+  [path->string 路径->字符串]
+  [find-system-path 查找系统路径]
   [build-path 构建路径]
 
+  [raise-argument-error 引发参数错误]
+  [raise-syntax-error 引发语法错误]
   ;; ========== 线程 ==========
   [thread 线程]
   [thread? 线程?]
@@ -306,6 +313,20 @@
   [with-syntax 带语法]
   [begin-for-syntax 编译期开始]
   [define-for-syntax 编译期定义]
+  [syntax-e 语法值]
+  [syntax->list 语法->列表]
+  [syntax-source 语法-源]
+  [syntax-line 语法-行]
+  [syntax-column 语法-列]
+  [syntax-position 语法-位置]
+  [free-identifier=? 自由标识符等同?]
+  [bound-identifier=? 绑定标识符等同?]
+  [identifier-binding 标识符绑定]
+  [let-syntax 令语法]
+  [letrec-syntax 递归令语法]
+  [let-syntaxes 令语法多]
+  [letrec-syntaxes 递归令语法多]
+  [local-expand 局部展开]
   [make-rename-transformer 制造重名转换器]
 
   ;; ========== 迭代/循环 ==========
@@ -341,6 +362,11 @@
   [let*-values 依次令多值]
   [call-with-values 调用-多值]
   [values 多值]
+  ;; ========== 命名空间 ==========
+  [dynamic-require 动态引用]
+  [current-namespace 当前命名空间]
+  [make-base-namespace 制造基础命名空间]
+  [namespace-variable-value 命名空间-变量值]
 
   ;; ========== 系统 ==========
   [exit 退出]
@@ -352,12 +378,8 @@
   ;; ========== 类型谓词 ==========
   [void 空值]
   [void? 空值?]
-  [procedure? 过程?]
   )
- )
-
-
-;; ============================================================
+  )
 ;; 4. 关键字函数中文包装（宏翻译 #:如果存在 → #:exists 等）
 ;; ============================================================
 (定义-关键字函数 打开输入文件 open-input-file
