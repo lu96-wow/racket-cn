@@ -35,7 +35,12 @@
 ;; 英文原语全部透传
 (provide (all-from-out racket))
 
-;; 中文子模块
+;; 中文子模块 (phase 0)
+(提供
+ (全定义导出))
+
+;; 语法工具 (phase 1: define-syntax body 中可用)
+(require (for-syntax racket/base))
 (provide
  (all-from-out "base-impl.rkt")
  (all-from-out "module.rkt")

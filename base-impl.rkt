@@ -16,6 +16,21 @@
 (require racket/base "kw.rkt")
 (require (for-syntax racket/base))
 
+;; macro forms need phase-1 provision for use in define-syntax body
+(provide (for-syntax (rename-out [syntax-case 语法匹配]
+                                 [syntax-rules 语法规则]
+                                 [with-syntax 带语法]
+                                 [quasisyntax 准语法]
+                                 [unsyntax 反语法]
+                                 [syntax 语法]
+                                 [syntax->list 语法->列表]
+                                 [syntax->datum 语法->数据]
+                                 [datum->syntax 数据->语法]
+                                 [syntax-e 语法值]
+                                 [free-identifier=? 自由标识符等同?]
+                                 [bound-identifier=? 绑定标识符等同?]
+                                 [local-expand 局部展开])))
+
 ;; ============================================================
 ;; 1. 语言核心绑定（#lang 必须）
 ;; ============================================================
