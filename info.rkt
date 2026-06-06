@@ -6,6 +6,17 @@
 
 (define title "racket-cn — 中文 Racket 语言")
 
-(define authors '("debian"))
+(define authors '("lu96-wow" "debian"))
 
-(define description "Racket 语言的中文版本，提供 racket-cn (完整版) 和 racket-cn/base (核心版)。")
+(define description
+  (string-append
+   "Racket 语言的中文版本。\n"
+   "提供 #lang racket-cn 和 #lang racket-cn/base。\n"
+   "覆盖 racket/base 291 个中文别名，21 个常用子模块，\n"
+   "支持中文关键字参数翻译 (#:如果存在 '截断 → #:exists 'truncate)。"))
+
+(define deps '("base"))
+
+(define build-deps '())
+
+(define auto-tests '())
