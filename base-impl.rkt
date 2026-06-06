@@ -13,7 +13,8 @@
 ;;   - 英文名和中文名可混用
 ;; ============================================================
 
-(require racket/base)
+(require racket/base "kw.rkt")
+(require (for-syntax racket/base))
 
 ;; ============================================================
 ;; 1. 语言核心绑定（#lang 必须）
@@ -255,14 +256,10 @@
   [read-char 读取-字符]
   [peek-char 窥视-字符]
   [newline 换行]
-  [open-input-file 打开输入文件]
-  [open-output-file 打开输出文件]
   [open-input-string 打开输入字符串]
   [open-output-string 打开输出字符串]
   [close-input-port 关闭输入端口]
   [close-output-port 关闭输出端口]
-  [call-with-input-file 调用-输入文件]
-  [call-with-output-file 调用-输出文件]
   [port? 端口?]
   [input-port? 输入端口?]
   [output-port? 输出端口?]
@@ -359,3 +356,25 @@
   )
  )
 
+
+;; ============================================================
+;; 4. 关键字函数中文包装（宏翻译 #:如果存在 → #:exists 等）
+;; ============================================================
+(定义-关键字函数 打开输入文件 open-input-file
+  (#:如果存在 #:exists (截断 truncate) (替换 replace) (追加 append)
+                        (更新 update) (可更新 can-update)))
+
+(定义-关键字函数 打开输出文件 open-output-file
+  (#:如果存在 #:exists (截断 truncate) (替换 replace) (追加 append)
+                        (更新 update) (可更新 can-update))
+  (#:模式 #:mode (文本 text) (字节 binary)))
+
+(定义-关键字函数 调用-输入文件 call-with-input-file
+  (#:如果存在 #:exists (截断 truncate) (替换 replace) (追加 append)
+                        (更新 update)))
+
+(定义-关键字函数 调用-输出文件 call-with-output-file
+  (#:如果存在 #:exists (截断 truncate) (替换 replace) (追加 append))
+  (#:模式 #:mode (文本 text)))
+
+(provide 打开输入文件 打开输出文件 调用-输入文件 调用-输出文件)
