@@ -19,6 +19,8 @@
          "future.rkt"         ;; racket/future
          "generator.rkt"      ;; racket/generator
          "hash.rkt"           ;; racket/hash
+         "hash.rkt"           ;; racket/hash
+         "json.rkt"           ;; json
          "list.rkt"           ;; racket/list
          "match.rkt"          ;; racket/match
          "path.rkt"           ;; racket/path
@@ -27,6 +29,7 @@
          "random.rkt"         ;; racket/random
          "sequence.rkt"       ;; racket/sequence
          "set.rkt"            ;; racket/set
+         "splicing.rkt"       ;; racket/splicing
          "stream.rkt"         ;; racket/stream
          "string.rkt"         ;; racket/string
          "system.rkt"         ;; racket/system
@@ -57,6 +60,8 @@
  (all-from-out "future.rkt")
  (all-from-out "generator.rkt")
  (all-from-out "hash.rkt")
+ (all-from-out "hash.rkt")
+ (all-from-out "json.rkt")
  (all-from-out "list.rkt")
  (all-from-out "match.rkt")
  (all-from-out "path.rkt")
@@ -66,6 +71,7 @@
  (all-from-out "sequence.rkt")
  (all-from-out "set.rkt")
  (all-from-out "stream.rkt")
+ (all-from-out "splicing.rkt")
  (all-from-out "string.rkt")
  (all-from-out "system.rkt")
  (all-from-out "trace.rkt")

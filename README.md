@@ -2,7 +2,7 @@
 
 Racket 语言的中文版本。提供 `#lang racket-cn` 和 `#lang racket-cn/base`。
 
-覆盖 291 个 `racket/base` 中文别名，22 个子模块，中文关键字参数翻译，
+覆盖 291 个 `racket/base` 中文别名，24 个子模块，中文关键字参数翻译，
 require/provide 子 form 中文原语。
 
 ## 安装
@@ -67,8 +67,10 @@ racket-cn/
 ├── set.rkt           # racket/set
 ├── dict.rkt          # racket/dict
 ├── stream.rkt        # racket/stream
+├── splicing.rkt      # racket/splicing
 ├── sequence.rkt      # racket/sequence
 ├── date.rkt          # racket/date
+├── json.rkt          # json
 ├── random.rkt        # racket/random
 ├── system.rkt        # racket/system
 ├── function.rkt      # racket/function
