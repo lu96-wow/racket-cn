@@ -30,6 +30,7 @@
          "stream.rkt"         ;; racket/stream
          "string.rkt"         ;; racket/string
          "system.rkt"         ;; racket/system
+          "trace.rkt"          ;; racket/trace
          "vector.rkt")        ;; racket/vector
 
 ;; 语言核心绑定
@@ -67,6 +68,7 @@
  (all-from-out "stream.rkt")
  (all-from-out "string.rkt")
  (all-from-out "system.rkt")
+ (all-from-out "trace.rkt")
  (all-from-out "vector.rkt")
 
  ;; racket 特有绑定（不在 racket/base 中）
