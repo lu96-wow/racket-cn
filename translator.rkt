@@ -332,7 +332,7 @@
     ;; 类型谓词
     (void                   . 空)
     (void?                  . 空?)
-    ;; racket 特有 (main-impl.rkt)
+    ;; racket 特有
     (delay                  . 延迟)
     (force                  . 求值)
     (promise?               . 承诺?)

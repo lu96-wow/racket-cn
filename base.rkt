@@ -1,10 +1,10 @@
 #lang racket/base
 
 ;; ============================================================
-;; racket-cn/base -- 薄转发层
+;; racket-cn/base — #lang racket-cn/base 和 (require racket-cn/base) 入口
 ;;
-;; #lang racket-cn/base 和 (require racket-cn/base) 的入口。
-;; 实际实现在 base-impl.rkt 中。
+;; 使用扁平 require+provide 结构（对齐用户集合规范）。
+;; Racket 内置集合使用 (module base ...) 包装，但用户集合不支持此模式。
 ;; ============================================================
 
 (require "base-impl.rkt"
@@ -14,7 +14,7 @@
          (all-from-out "module.rkt"))
 
 ;; ============================================================
-;; Reader 子模块 -- 支持 #lang racket-cn/base
+;; Reader 子模块 — 支持 #lang racket-cn/base
 ;; ============================================================
 (module reader syntax/module-reader
-  racket-cn/base-impl)
+  racket-cn/base)

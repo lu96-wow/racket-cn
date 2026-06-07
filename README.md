@@ -59,13 +59,15 @@ raco link -r racket-cn
 
 ## 文件结构
 
+> 对齐 Racket 原生结构：base.rkt 使用 `(module base ...)` 模式，
+> main.rkt 自身即为实现，reader 子模块自循环指向自身。
+
 ```
 racket-cn/
-├── base.rkt          # #lang racket-cn/base 入口
+├── base.rkt          # #lang racket-cn/base 入口 (module base 模式)
 ├── base-impl.rkt     # racket/base (291 rename-out + 关键词宏)
 ├── kw.rkt            # 定义-关键字函数 宏
-├── main.rkt          # #lang racket-cn 入口
-├── main-impl.rkt     # 所有子模块聚合
+├── main.rkt          # #lang racket-cn 入口 + 实现 (对齐 Racket)
 ├── module.rkt        # 引用/提供/全定义导出
 │
 ├── file.rkt          # racket/file
