@@ -615,7 +615,10 @@
          [kw-map (if (eq? 方向 '英->中) 英kw->中kw 中kw->英kw)]
          [kw-val-map (if (eq? 方向 '英->中) 英kw->值map 中kw->值map)])
     (let 翻译递归 ([stx stx] [last-kw #f])
-      (syntax-case stx ()
+      (syntax-case stx (no-translate)
+        ;; (no-translate expr) — 去掉包装，内容不翻译
+        [(no-translate expr)
+         #'expr]
 [(a . d)
          (let* ([a-is-kw? (keyword? (syntax-e #'a))]
                 [next-kw (if a-is-kw? (syntax-e #'a) last-kw)]

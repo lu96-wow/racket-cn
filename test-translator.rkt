@@ -165,6 +165,21 @@
 (check-true (翻译后包含? "(循环/列表 ([x (在范围 3)]) x)" "for/list" #:方向 '中->英)
             "循环/列表 -> for/list")
 
+
+;; ============ no-translate 转义 ============
+;; (no-translate expr) 去掉包装，内容原样保留
+(let ([r (翻译代码 "(hash (no-translate (quote hash)) (quote a))" #:方向 '英->中)])
+  (check-true (string-contains? r "(quote hash)") "no-translate: 'hash保留")
+  (check-true (string-contains? r "(引述 a)") "no-translate: 'a仍翻译"))
+
+(let ([r (翻译代码 "(let ([x (no-translate (定义 y 1))]) y)" #:方向 '中->英)])
+  (check-true (string-contains? r "定义") "no-translate: 定义保留不翻译")
+  (check-true (string-contains? r "let") "no-translate外: let正常翻译"))
+
+;; 不带 no-translate 的对照: 'hash 被翻译
+(let ([r (翻译代码 "(hash (quote hash) (quote a))" #:方向 '英->中)])
+  (check-true (string-contains? r "哈希") "对照: 'hash被翻译"))
+
 ;; ============ 边界情况 ============
 (check-equal? (翻译代码 "()" #:方向 '英->中) "()\n" "空列表")
 (check-equal? (翻译代码 "()" #:方向 '中->英) "()\n" "空列表中->英")
