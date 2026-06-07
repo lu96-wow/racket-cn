@@ -120,5 +120,6 @@ racket-cn/
 ## 注意事项
 
 - 宏定义体内使用中文名（`语法匹配`、`带语法` 等）需要 `(require (for-syntax racket/base))`
-- `syntax-rules` 改名后展开器不识别，建议用 `syntax-case`
+- `定义语法规则`（`define-syntax-rule`）改名后模块层不识别，需用 `定义语法` + `语法匹配`；
+- `语法规则` 只能在 `(定义语法 name (语法规则 ...))` 直用形式下工作，缩写形式 `(定义语法 (name stx) ...)` 中需用 `语法匹配`（和原版 `syntax-rules` 限制一致，是 `define-syntax` 语法糖展开时机问题）
 - `引用`（`require`）在模块顶层不能替代 `require`（展开器时序限制）
