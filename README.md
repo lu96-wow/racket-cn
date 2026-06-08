@@ -2,7 +2,7 @@
 
 Racket 语言的中文版本。提供 `#lang racket-cn` 和 `#lang racket-cn/base`。
 
-覆盖 291 个 `racket/base` 中文别名，24 个子模块，中文关键字参数翻译，
+覆盖 536 个中英文翻译对（含 racket/base 核心 + 24 个子模块 + json），中文关键字参数翻译，
 require/provide 子 form 中文原语。
 
 ## 安装
