@@ -2,7 +2,7 @@
 
 Racket 语言的中文版本。提供 `#lang racket-cn` 和 `#lang racket-cn/base`。
 
-覆盖 582 个中英文翻译对（含 racket/base 核心 + 33 个子模块 + json + module.rkt），中文关键字参数翻译，
+覆盖 734 个中英文翻译对（含 racket/base 核心 + 47 个子模块 + json + module.rkt），中文关键字参数翻译，
 require/provide 子 form 中文原语。翻译映射全部从源文件自动扫描生成，无需手写。
 
 ## 安装
@@ -76,39 +76,53 @@ racket-cn/
 ├── racket/           # racket/xxx 子集合 (对应 /usr/share/racket/collects/racket/)
 │   ├── main.rkt      # \`(require racket-cn/racket)\` 实际入口
 │   ├── info.rkt      # 子集合元数据
-│   │   ├── base-impl.rkt # racket/base 中文别名 (291 rename-out + 关键字宏)
-│   │   ├── bool.rkt      # racket/bool
-│   │   ├── bytes.rkt     # racket/bytes
-│   │   ├── class.rkt     # racket/class
-│   │   ├── cmdline.rkt   # racket/cmdline
-│   │   ├── contract.rkt  # racket/contract
-│   │   ├── date.rkt      # racket/date
-│   │   ├── dict.rkt      # racket/dict
-│   │   ├── exn.rkt       # racket/exn
-│   │   ├── file.rkt      # racket/file
-│   │   ├── format.rkt    # racket/format
-│   │   ├── function.rkt  # racket/function
-│   │   ├── future.rkt    # racket/future
-│   │   ├── generator.rkt # racket/generator
-│   │   ├── hash.rkt      # racket/hash
-│   │   ├── keyword.rkt   # racket/keyword
-│   │   ├── list.rkt      # racket/list
-│   │   ├── match.rkt     # racket/match
-│   │   ├── math.rkt      # racket/math
-│   │   ├── path.rkt      # racket/path
-│   │   ├── port.rkt      # racket/port
-│   │   ├── pretty.rkt    # racket/pretty
-│   │   ├── random.rkt    # racket/random
-│   │   ├── sequence.rkt  # racket/sequence
-│   │   ├── set.rkt       # racket/set
-│   │   ├── splicing.rkt  # racket/splicing
-│   │   ├── stream.rkt    # racket/stream
-│   │   ├── string.rkt    # racket/string
-│   │   ├── struct.rkt    # racket/struct
-│   │   ├── symbol.rkt    # racket/symbol
-│   │   ├── system.rkt    # racket/system
-│   │   ├── trace.rkt     # racket/trace
-│   │   └── vector.rkt    # racket/vector
+│   │   ├── async-channel.rkt # racket/async-channel
+│   │   ├── base-impl.rkt    # racket/base 核心 (291 rename-out + 关键字宏)
+│   │   ├── block.rkt        # racket/block
+│   │   ├── bool.rkt         # racket/bool
+│   │   ├── bytes.rkt        # racket/bytes
+│   │   ├── case.rkt         # racket/case
+│   │   ├── class.rkt        # racket/class
+│   │   ├── cmdline.rkt      # racket/cmdline
+│   │   ├── contract.rkt     # racket/contract
+│   │   ├── control.rkt      # racket/control
+│   │   ├── date.rkt         # racket/date
+│   │   ├── dict.rkt         # racket/dict
+│   │   ├── engine.rkt       # racket/engine
+│   │   ├── exn.rkt          # racket/exn
+│   │   ├── file.rkt         # racket/file
+│   │   ├── format.rkt       # racket/format
+│   │   ├── function.rkt     # racket/function
+│   │   ├── future.rkt       # racket/future
+│   │   ├── generator.rkt    # racket/generator
+│   │   ├── hash.rkt         # racket/hash
+│   │   ├── include.rkt      # racket/include
+│   │   ├── keyword.rkt      # racket/keyword
+│   │   ├── lazy-require.rkt # racket/lazy-require
+│   │   ├── list.rkt         # racket/list
+│   │   ├── match.rkt        # racket/match
+│   │   ├── math.rkt         # racket/math
+│   │   ├── os.rkt           # racket/os
+│   │   ├── path.rkt         # racket/path
+│   │   ├── port.rkt         # racket/port
+│   │   ├── prefab.rkt       # racket/prefab
+│   │   ├── pretty.rkt       # racket/pretty
+│   │   ├── random.rkt       # racket/random
+│   │   ├── sequence.rkt     # racket/sequence
+│   │   ├── serialize.rkt    # racket/serialize
+│   │   ├── set.rkt          # racket/set
+│   │   ├── splicing.rkt     # racket/splicing
+│   │   ├── stream.rkt       # racket/stream
+│   │   ├── string.rkt       # racket/string
+│   │   ├── struct.rkt       # racket/struct
+│   │   ├── symbol.rkt       # racket/symbol
+│   │   ├── syntax.rkt       # racket/syntax
+│   │   ├── system.rkt       # racket/system
+│   │   ├── tcp.rkt          # racket/tcp
+│   │   ├── trace.rkt        # racket/trace
+│   │   ├── treelist.rkt     # racket/treelist
+│   │   ├── udp.rkt          # racket/udp
+│   │   └── vector.rkt       # racket/vector
 └──
 ```
 
