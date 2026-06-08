@@ -77,4 +77,21 @@
           (all-from-out "os.rkt")
           (all-from-out "prefab.rkt")
           (all-from-out "serialize.rkt")
-          (all-from-out "treelist.rkt"))
+          (all-from-out "treelist.rkt"
+          "unit.rkt"
+          "trait.rkt"
+          "generic.rkt"
+          "fixnum.rkt"
+          "flonum.rkt"
+          "mutability.rkt"
+          "promise.rkt"
+          "hash-code.rkt"
+          "deprecation.rkt"
+          "syntax-srcloc.rkt"
+          "repl.rkt"
+          "shared.rkt"
+          "undefined.rkt"
+          "unreachable.rkt"
+          "runtime-path.rkt"
+          "keyword-transform.rkt"
+          "struct-info.rkt"))
