@@ -69,9 +69,6 @@ raco pkg remove racket-cn
     [(_) #'#f]
     [(_ x) #'x]
     [(_ x y ...) #'(令 ([t x]) (如果 t t (my-or y ...)))]))
-
-;; Phase-1 中文绑定需显式 require（和标准 Racket 一致）
-(require (for-syntax racket-cn/base))
 ```
 
 ### require/provide 子 form
@@ -130,7 +127,7 @@ racket translator.rkt --dir src/ out/     # 递归翻译目录
 
 - 宏定义用 `定义语法` + `语法匹配`，`定义语法规则` 改名后模块层不识别
 - `语法规则` 只能在 `(定义语法 name (语法规则 ...))` 直用 form 下工作
-- Phase-1 中文绑定（`语法匹配`、`带语法` 等）需显式 `(require (for-syntax racket-cn/base))`，和标准 Racket 一致
+- Phase-1 中文绑定（`语法匹配`、`函数`、`如果` 等 30 个）已通过 `main.rkt` 的 `(for-syntax ...)` 提供，和 `(require (for-syntax racket/base))` 对称
 - 映射表由 `translator.rkt` 自动扫描源文件生成，添加新模块后运行 `racket translator.rkt --gen-data` 即可
 
 ## 覆盖

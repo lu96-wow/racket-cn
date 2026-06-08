@@ -1182,16 +1182,16 @@
     (define-syntax-rule . 定义语法规则)
     (define-syntax . 定义语法)
     (define . 定义)
-   ))
+    ))
 
 (define 关键字-翻译表
   '(
     (#:mode . #:模式)
     (#:exists . #:如果存在)
-   ))
+    ))
 
 (define 关键字值-翻译表
   '(
     (#:mode (文本 . text) (字节 . binary))
     (#:exists (截断 . truncate) (替换 . replace) (追加 . append) (更新 . update) (可更新 . can-update))
-   ))
+    ))
