@@ -344,18 +344,117 @@
       (display 翻译后)))
 
 ;; ============================================================
-;; 10. 命令行接口
+;; 9b. 目录递归翻译
 ;; ============================================================
+
+(define (翻译目录 输入目录 输出目录 #:方向 [方向 '英->中] #:后缀 [后缀 ".rkt"])
+  "递归翻译输入目录下所有指定后缀文件到输出目录"
+  (define 方向-名字 (if (eq? 方向 '英->中) "英文→中文" "中文→英文"))
+  (printf "翻译目录 (~a): ~a → ~a\n" 方向-名字 输入目录 输出目录)
+  (define count 0)
+  (let loop-dir ([in-dir 输入目录] [out-dir 输出目录])
+    (make-directory* out-dir)
+    (for ([f (in-list (directory-list in-dir))])
+      (define in-path (build-path in-dir f))
+      (cond
+        [(directory-exists? in-path)
+         (loop-dir in-path (build-path out-dir f))]
+        [(path-has-extension? in-path 后缀)
+         (define out-path (build-path out-dir f))
+         (翻译文件 in-path #:输出路径 out-path #:方向 方向)
+         (set! count (add1 count))]
+        [else (void)])))
+  (printf "✓ 完成: ~a 个文件\n" count))
+
+;; ============================================================
+;; 9c. 自动更新测试
+;; ============================================================
+
+(define (更新测试 [输出路径 #f])
+  "根据当前标识符-翻译表自动生成 test-translator.rkt"
+  (define out (if 输出路径
+                  (open-output-file 输出路径 #:exists 'replace)
+                  (open-output-file
+                   (build-path (collection-path "racket-cn") "test-translator.rkt")
+                   #:exists 'replace)))
+  (define (写 . args) (for ([a args]) (display a out)) (newline out))
+  (define 映射 (hash->list 英->中))
+  (define (有? name) (and (assoc name 映射) name))
+  (define (取 . names) (filter values (map 有? names)))
+  (写 "#lang racket/base")
+  (写 "(require rackunit \"translator.rkt\" racket/string racket/list)")
+  (写)
+  (写 "(define (翻译代码 code #:方向 [方向 '英->中])")
+  (写 "  (翻译字符串 code #:方向 方向))")
+  (写 "(define (翻译后包含? code pattern #:方向 [方向 '英->中])")
+  (写 "  (string-contains? (翻译代码 code #:方向 方向) pattern))")
+  (写)
+  (写 "(printf \"\\n===== racket-cn 翻译器测试 =====\\n\\n\")")
+  (写)
+  (写 ";; ============ 核心特殊形式 ============")
+  (for ([en (in-list (filter values (list (有? 'define) (有? 'lambda) (有? 'if) (有? 'cond) (有? 'let) (有? 'set!) (有? 'begin) (有? 'when) (有? 'unless) (有? 'and) (有? 'or) (有? 'not) (有? 'quote))))])
+    (define cn (hash-ref 英->中 en))
+    (fprintf out "(check-true (翻译后包含? \"(~a x 1)\" \"~a\") \"~a -> ~a\")~n" en cn en cn))
+  (写)
+  (写 ";; ============ 列表 ============")
+  (for ([en (in-list (filter values (list (有? 'cons) (有? 'car) (有? 'cdr) (有? 'null?) (有? 'list) (有? 'map) (有? 'filter))))])
+    (define cn (hash-ref 英->中 en))
+    (fprintf out "(check-true (翻译后包含? \"(~a 1 2)\" \"~a\") \"~a -> ~a\")~n" en cn en cn))
+  (写)
+  (写 ";; ============ IO ============")
+  (for ([en (in-list (filter values (list (有? 'display) (有? 'displayln) (有? 'printf) (有? 'write) (有? 'read))))])
+    (define cn (hash-ref 英->中 en))
+    (fprintf out "(check-true (翻译后包含? \"(~a x)\" \"~a\") \"~a -> ~a\")~n" en cn en cn))
+  (写)
+  (写 ";; ============ 中->英 ============")
+  (for ([en (in-list (filter values (list (有? 'define) (有? 'lambda) (有? 'if) (有? 'cond) (有? 'let) (有? 'when) (有? 'and) (有? 'or) (有? 'not))))])
+    (define cn (hash-ref 英->中 en))
+    (fprintf out "(check-true (翻译后包含? \"(~a x 1)\" \"~a\" #:方向 '中->英) \"~a -> ~a\")~n" cn en cn en))
+  (写)
+  (写 ";; ============ 关键字翻译 ============")
+  (写 "(check-true (翻译后包含? \"(open-output-file \\\"a\\\" #:exists 'truncate)\" \"#:如果存在\") \"#:exists -> #:如果存在\")")
+  (写 "(check-true (翻译后包含? \"(打开输出文件 \\\"a\\\" #:如果存在 '截断)\" \"#:exists\" #:方向 '中->英) \"#:如果存在 -> #:exists\")")
+  (写 "(check-true (翻译后包含? \"(open-output-file \\\"a\\\" #:exists 'truncate)\" \"截断\") \"'truncate -> '截断\")")
+  (写)
+  (写 ";; ============ 子模块抽样 ============")
+  (for ([en (in-list (filter values (list (有? 'hash-empty?) (有? 'hash-union) (有? 'take) (有? 'drop) (有? 'sort) (有? 'range) (有? 'first) (有? 'last) (有? 'match) (有? 'class) (有? 'new) (有? 'set) (有? 'for/list) (有? 'for/and) (有? 'for/fold) (有? 'in-range) (有? 'in-list))))])
+    (define cn (hash-ref 英->中 en))
+    (fprintf out "(check-true (翻译后包含? \"(~a x)\" \"~a\") \"~a\")~n" en cn en))
+  (for ([en (in-list (filter values (list (有? 'for/list))))])
+    (define cn (hash-ref 英->中 en))
+    (fprintf out "(check-true (翻译后包含? \"(~a ([x (在范围 3)]) x)\" \"~a\" #:方向 '中->英) \"~a -> ~a\")~n" cn en cn en))
+  (写)
+  (写 ";; ============ 嵌套/边界 ============")
+  (写 "(let ([r (翻译代码 \"(let ([x (let ([y 1]) y)]) (let ([z 2]) (+ x z)))\" #:方向 '英->中)])")
+  (写 "  (check-true (string-contains? r \"令\") \"嵌套let: 令\"))")
+  (写 "(let ([r (翻译代码 \"(hash (no-translate (quote hash)) (quote a))\" #:方向 '英->中)])")
+  (写 "  (check-true (string-contains? r \"(quote hash)\") \"no-translate: 'hash保留\")")
+  (写 "  (check-true (string-contains? r \"(引述 a)\") \"no-translate: 'a仍翻译\"))")
+  (写 "(check-equal? (翻译代码 \"()\" #:方向 '英->中) \"()\\n\" \"空列表\")")
+  (写 "(check-equal? (翻译代码 \"()\" #:方向 '中->英) \"()\\n\" \"空列表中->英\")")
+  (写)
+  (写 "(printf \"\\n全部测试完成!\\n\")")
+  (close-output-port out)
+  (printf ";; ✓ test-translator.rkt updated (~a tests)\\n" 0))
+
+(provide 翻译目录 更新测试)
 (module+ main
   (define args (current-command-line-arguments))
   (define 输入文件 #f)
   (define 输出文件 #f)
   (define 方向 '英->中)
   (define 生成数据? #f)
+  (define 更新测试? #f)
+  (define 翻译目录输入 #f)
+  (define 翻译目录输出 #f)
   (let loop ([remaining (vector->list args)])
     (match remaining
       [(list) (void)]
       [(list "--gen-data" rest ...) (set! 生成数据? #t) (loop rest)]
+      [(list "--update-tests" rest ...) (set! 更新测试? #t) (loop rest)]
+      [(list "--gen-tests" rest ...) (set! 更新测试? #t) (loop rest)]
+      [(list "--dir" indir outdir rest ...)
+       (set! 翻译目录输入 indir) (set! 翻译目录输出 outdir) (loop rest)]
       [(list "--en-to-cn" rest ...) (set! 方向 '英->中) (loop rest)]
       [(list "--en2cn" rest ...) (set! 方向 '英->中) (loop rest)]
       [(list "--cn-to-en" rest ...) (set! 方向 '中->英) (loop rest)]
@@ -368,11 +467,44 @@
            (error (format "未知选项: ~a" f)))]))
   (cond
     [生成数据? (生成-翻译数据 输出文件)]
+    [更新测试? (更新测试 输出文件)]
+    [(and 翻译目录输入 翻译目录输出)
+     (翻译目录 翻译目录输入 翻译目录输出)]
     [(not 输入文件)
      (printf "用法: racket translator.rkt <输入文件> [选项]\n")
      (printf "  --gen-data          生成 translator-data.rkt\n")
      (printf "  --en-to-cn, --en2cn 英文→中文 (默认)\n")
      (printf "  --cn-to-en, --cn2en 中文→英文\n")
      (printf "  -o, --output FILE   输出文件\n")
+     (printf "  --update-tests      根据当前绑定自动更新 test-translator.rkt\n")
+     (printf "  --dir INDIR OUTDIR  递归翻译目录\n")
      (exit 1)]
     [else (翻译文件 输入文件 #:输出路径 输出文件 #:方向 方向)]))
+
+;; ============================================================
+;; 11. 便捷函数（方向硬编码，无需 #:方向 关键字）
+;; ============================================================
+
+(define (翻译文件-英->中 输入路径 [输出路径 #f])
+  (翻译文件 输入路径 #:输出路径 输出路径 #:方向 '英->中))
+
+(define (翻译文件-中->英 输入路径 [输出路径 #f])
+  (翻译文件 输入路径 #:输出路径 输出路径 #:方向 '中->英))
+
+(define (翻译文件夹-英->中 输入目录 输出目录)
+  (翻译目录 输入目录 输出目录 #:方向 '英->中))
+
+(define (翻译文件夹-中->英 输入目录 输出目录)
+  (翻译目录 输入目录 输出目录 #:方向 '中->英))
+
+(provide 翻译文件-英->中 翻译文件-中->英
+         翻译文件夹-英->中 翻译文件夹-中->英)
+
+;; 语言核心绑定（#lang 必须）
+(provide #%module-begin #%app #%datum #%top (all-from-out racket/base))
+
+;; ============================================================
+;; Reader 子模块 — 支持 #lang racket-cn/translator
+;; ============================================================
+(module reader syntax/module-reader
+  racket-cn/translator)
