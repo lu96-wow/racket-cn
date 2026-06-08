@@ -9,7 +9,6 @@
    [treelist-length 树列表-长度]
    [treelist-ref 树列表-引用]
    [treelist-add 树列表-添加]
-   [treelist-add* 树列表-添加*]
    [treelist-append 树列表-拼接]
    [treelist-append* 树列表-拼接*]
    [treelist-set 树列表-设置]
