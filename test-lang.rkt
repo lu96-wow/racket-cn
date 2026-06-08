@@ -1,5 +1,5 @@
 #lang racket/base
-(require (for-syntax racket/base) "main.rkt")
+(require (for-syntax racket/base) (for-syntax "racket/base-impl.rkt") "main.rkt")
 
 (显示 "=== racket-cn ===\n")
 

@@ -83,7 +83,8 @@
   [local-expand 局部展开])))
 ```
 
-Phase-1 只有 `racket/base` 的 for-syntax 提供，中文 IO 函数不可用。
+Phase-1 需要显式 `(require (for-syntax racket-cn/base))` 才能使用中文语法工具（`语法匹配`、`带语法` 等），
+和标准 Racket 完全一致（标准 Racket 也需要 `(require (for-syntax racket/base))` 才能用 `syntax-case`）。
 
 ### `语法规则` 的使用限制
 
