@@ -2,8 +2,8 @@
 
 Racket 语言的中文版本。提供 `#lang racket-cn` 和 `#lang racket-cn/base`。
 
-覆盖 536 个中英文翻译对（含 racket/base 核心 + 24 个子模块 + json），中文关键字参数翻译，
-require/provide 子 form 中文原语。
+覆盖 582 个中英文翻译对（含 racket/base 核心 + 33 个子模块 + json + module.rkt），中文关键字参数翻译，
+require/provide 子 form 中文原语。翻译映射全部从源文件自动扫描生成，无需手写。
 
 ## 安装
 
@@ -62,7 +62,8 @@ racket-cn/
 ├── main.rkt          # #lang racket-cn 入口 + 实现
 ├── module.rkt        # require/provide 子 form 中文原语
 ├── kw.rkt            # 定义-关键字函数 宏
-├── translator.rkt    # 中英双向翻译器
+├── translator.rkt    # 中英双向翻译器（自动扫描源文件生成映射）
+├── translator-data.rkt # 翻译映射数据文件（由 translator.rkt 自动生成）
 ├── json.rkt          # \`(require racket-cn/json)\` 入口 shim
 ├── racket.rkt        # \`(require racket-cn/racket)\` 入口 shim
 ├── base/lang/        # #lang racket-cn/base reader stub
@@ -75,30 +76,39 @@ racket-cn/
 ├── racket/           # racket/xxx 子集合 (对应 /usr/share/racket/collects/racket/)
 │   ├── main.rkt      # \`(require racket-cn/racket)\` 实际入口
 │   ├── info.rkt      # 子集合元数据
-│   ├── base-impl.rkt # racket/base 中文别名 (291 rename-out + 关键字宏)
-│   ├── class.rkt     # racket/class
-│   ├── contract.rkt  # racket/contract
-│   ├── date.rkt      # racket/date
-│   ├── dict.rkt      # racket/dict
-│   ├── file.rkt      # racket/file
-│   ├── function.rkt  # racket/function
-│   ├── future.rkt    # racket/future
-│   ├── generator.rkt # racket/generator
-│   ├── hash.rkt      # racket/hash
-│   ├── list.rkt      # racket/list
-│   ├── match.rkt     # racket/match
-│   ├── path.rkt      # racket/path
-│   ├── port.rkt      # racket/port
-│   ├── pretty.rkt    # racket/pretty
-│   ├── random.rkt    # racket/random
-│   ├── sequence.rkt  # racket/sequence
-│   ├── set.rkt       # racket/set
-│   ├── splicing.rkt  # racket/splicing
-│   ├── stream.rkt    # racket/stream
-│   ├── string.rkt    # racket/string
-│   ├── system.rkt    # racket/system
-│   ├── trace.rkt     # racket/trace
-│   └── vector.rkt    # racket/vector
+│   │   ├── base-impl.rkt # racket/base 中文别名 (291 rename-out + 关键字宏)
+│   │   ├── bool.rkt      # racket/bool
+│   │   ├── bytes.rkt     # racket/bytes
+│   │   ├── class.rkt     # racket/class
+│   │   ├── cmdline.rkt   # racket/cmdline
+│   │   ├── contract.rkt  # racket/contract
+│   │   ├── date.rkt      # racket/date
+│   │   ├── dict.rkt      # racket/dict
+│   │   ├── exn.rkt       # racket/exn
+│   │   ├── file.rkt      # racket/file
+│   │   ├── format.rkt    # racket/format
+│   │   ├── function.rkt  # racket/function
+│   │   ├── future.rkt    # racket/future
+│   │   ├── generator.rkt # racket/generator
+│   │   ├── hash.rkt      # racket/hash
+│   │   ├── keyword.rkt   # racket/keyword
+│   │   ├── list.rkt      # racket/list
+│   │   ├── match.rkt     # racket/match
+│   │   ├── math.rkt      # racket/math
+│   │   ├── path.rkt      # racket/path
+│   │   ├── port.rkt      # racket/port
+│   │   ├── pretty.rkt    # racket/pretty
+│   │   ├── random.rkt    # racket/random
+│   │   ├── sequence.rkt  # racket/sequence
+│   │   ├── set.rkt       # racket/set
+│   │   ├── splicing.rkt  # racket/splicing
+│   │   ├── stream.rkt    # racket/stream
+│   │   ├── string.rkt    # racket/string
+│   │   ├── struct.rkt    # racket/struct
+│   │   ├── symbol.rkt    # racket/symbol
+│   │   ├── system.rkt    # racket/system
+│   │   ├── trace.rkt     # racket/trace
+│   │   └── vector.rkt    # racket/vector
 └──
 ```
 
@@ -138,3 +148,21 @@ racket-cn/
 - `语法规则` 只能在 `(定义语法 name (语法规则 ...))` 直用 form 下工作
 - `引用`（`require`）在模块顶层不能替代 `require`
 - `for-syntax` 的 phase-1 中文绑定（`语法匹配`、`带语法` 等）已通过 `(provide (for-syntax ...))` 提供
+
+## 翻译映射数据
+
+翻译映射表由 `translator.rkt` **自动扫描源文件**生成，无需手写。扫描逻辑使用 `syntax-parse` 精确提取以下三种绑定：
+
+| 绑定方式 | 来源文件 | 提取内容 |
+|---------|---------|---------|
+| `rename-out` | `base-impl.rkt`, `racket/*.rkt`, `json/main.rkt`, `main.rkt` | 标识符映射（`define→定义` 等）|
+| `define-syntax` + `make-rename-transformer` | `module.rkt` | require/provide 子 form 映射 |
+| `定义-关键字函数` | `base-impl.rkt`, `racket/file.rkt` | 关键字映射 + 关键字值映射 |
+
+```bash
+# 重新生成 translator-data.rkt
+racket translator.rkt --gen-data
+
+# 指定输出路径
+racket translator.rkt --gen-data -o /path/to/translator-data.rkt
+```
