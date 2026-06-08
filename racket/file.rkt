@@ -1,6 +1,6 @@
 #lang racket/base
 (require racket/file
-         "kw.rkt"
+         "../kw.rkt"
          (for-syntax racket/base))
 
 ;; ============================================================

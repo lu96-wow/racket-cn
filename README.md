@@ -17,6 +17,14 @@ cd /path/to/racket-cn && raco link racket-cn
 
 卸载：`raco pkg remove racket-cn` 或 `raco link -r racket-cn`
 
+### 子模块独立引用
+
+```racket
+(require racket-cn/racket)   ;; 加载所有 racket/xxx 中文别名
+(require racket-cn/json)     ;; 仅加载 JSON 中文别名
+(require racket-cn/racket/list)  ;; 仅加载 racket/list 中文别名
+```
+
 ## 快速开始
 
 ```racket
@@ -49,39 +57,49 @@ cd /path/to/racket-cn && raco link racket-cn
 
 ```
 racket-cn/
+│
 ├── base.rkt          # #lang racket-cn/base 入口
-├── base-impl.rkt     # racket/base 中文别名 (291 rename-out + 关键字宏)
 ├── main.rkt          # #lang racket-cn 入口 + 实现
 ├── module.rkt        # require/provide 子 form 中文原语
 ├── kw.rkt            # 定义-关键字函数 宏
 ├── translator.rkt    # 中英双向翻译器
-│
-├── file.rkt          # racket/file
-├── hash.rkt          # racket/hash
-├── vector.rkt        # racket/vector
-├── list.rkt          # racket/list
-├── string.rkt        # racket/string
-├── match.rkt         # racket/match
-├── class.rkt         # racket/class
-├── contract.rkt      # racket/contract
-├── set.rkt           # racket/set
-├── dict.rkt          # racket/dict
-├── stream.rkt        # racket/stream
-├── splicing.rkt      # racket/splicing
-├── sequence.rkt      # racket/sequence
-├── date.rkt          # racket/date
-├── json.rkt          # json
-├── random.rkt        # racket/random
-├── system.rkt        # racket/system
-├── function.rkt      # racket/function
-├── future.rkt        # racket/future
-├── generator.rkt     # racket/generator
-├── pretty.rkt        # racket/pretty
-├── trace.rkt         # racket/trace
-├── path.rkt          # racket/path
-├── port.rkt          # racket/port
+├── json.rkt          # \`(require racket-cn/json)\` 入口 shim
+├── racket.rkt        # \`(require racket-cn/racket)\` 入口 shim
 ├── base/lang/        # #lang racket-cn/base reader stub
-└── info.rkt
+├── info.rkt
+│
+├── json/             # json 子集合
+│   ├── main.rkt      # JSON 中文别名绑定
+│   └── info.rkt
+│
+├── racket/           # racket/xxx 子集合 (对应 /usr/share/racket/collects/racket/)
+│   ├── main.rkt      # \`(require racket-cn/racket)\` 实际入口
+│   ├── info.rkt      # 子集合元数据
+│   ├── base-impl.rkt # racket/base 中文别名 (291 rename-out + 关键字宏)
+│   ├── class.rkt     # racket/class
+│   ├── contract.rkt  # racket/contract
+│   ├── date.rkt      # racket/date
+│   ├── dict.rkt      # racket/dict
+│   ├── file.rkt      # racket/file
+│   ├── function.rkt  # racket/function
+│   ├── future.rkt    # racket/future
+│   ├── generator.rkt # racket/generator
+│   ├── hash.rkt      # racket/hash
+│   ├── list.rkt      # racket/list
+│   ├── match.rkt     # racket/match
+│   ├── path.rkt      # racket/path
+│   ├── port.rkt      # racket/port
+│   ├── pretty.rkt    # racket/pretty
+│   ├── random.rkt    # racket/random
+│   ├── sequence.rkt  # racket/sequence
+│   ├── set.rkt       # racket/set
+│   ├── splicing.rkt  # racket/splicing
+│   ├── stream.rkt    # racket/stream
+│   ├── string.rkt    # racket/string
+│   ├── system.rkt    # racket/system
+│   ├── trace.rkt     # racket/trace
+│   └── vector.rkt    # racket/vector
+└──
 ```
 
 ## require/provide 子 form 中文原语

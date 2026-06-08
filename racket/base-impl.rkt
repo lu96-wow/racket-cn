@@ -13,7 +13,7 @@
 ;;   - 英文名和中文名可混用
 ;; ============================================================
 
-(require racket/base "kw.rkt")
+(require racket/base "../kw.rkt")
 (require (for-syntax racket/base))
 
 ;; macro forms need phase-1 provision for use in define-syntax body

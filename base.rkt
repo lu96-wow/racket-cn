@@ -7,10 +7,10 @@
 ;; Racket 内置集合使用 (module base ...) 包装，但用户集合不支持此模式。
 ;; ============================================================
 
-(require "base-impl.rkt"
+(require "racket/base-impl.rkt"
          "module.rkt")
 
-(provide (all-from-out "base-impl.rkt")
+(provide (all-from-out "racket/base-impl.rkt")
          (all-from-out "module.rkt"))
 
 ;; ============================================================
