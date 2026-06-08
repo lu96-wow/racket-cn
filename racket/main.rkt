@@ -94,4 +94,9 @@
           "unreachable.rkt"
           "runtime-path.rkt"
           "keyword-transform.rkt"
-          "struct-info.rkt"))
+          "struct-info.rkt"
+          "place.rkt"
+          "logging.rkt"
+          "mutable-treelist.rkt"
+          "serialize-structs.rkt"
+          "help.rkt"))
