@@ -143,12 +143,30 @@
                                         '("base-impl.rkt" "main.rkt"
                                           "info.rkt")))))
       f))
+  (define ffi-dir (build-path (collection-path "racket-cn") "ffi"))
+  (define ffi-top
+    (for/list ([f (in-list (directory-list ffi-dir #:build? #t))]
+               #:when (and (path-has-extension? f #".rkt")
+                           (file-exists? f)
+                           (not (member (path->string (file-name-from-path f))
+                                        '("main.rkt" "info.rkt")))))
+      f))
+  (define ffi-unsafe-dir (build-path ffi-dir "unsafe"))
+  (define ffi-unsafe
+    (if (directory-exists? ffi-unsafe-dir)
+        (for/list ([f (in-list (directory-list ffi-unsafe-dir #:build? #t))]
+                   #:when (and (path-has-extension? f #".rkt")
+                               (file-exists? f)))
+          f)
+        '()))
   (append
    (list (build-path racket-dir "base-impl.rkt"))
    sub-files
    (list (build-path (collection-path "racket-cn") "json" "main.rkt"))
    (list (build-path (collection-path "racket-cn") "main.rkt"))
-   (list (build-path (collection-path "racket-cn") "module.rkt"))))
+   (list (build-path (collection-path "racket-cn") "module.rkt"))
+   ffi-top
+   ffi-unsafe))
 
 (define (收集-所有-翻译映射)
   (define id-maps '())
