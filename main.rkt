@@ -8,10 +8,9 @@
 ;; ============================================================
 
 (require racket
-         "racket/base-impl.rkt"   ;; racket/base 全量
          "module.rkt"             ;; require/provide 中文别名
          "json/main.rkt"          ;; json (顶层集合)
-         "racket/main.rkt")       ;; racket/xxx 子模块全部
+         "racket/main.rkt")       ;; racket/xxx 子模块全部（含 base-impl）
 
 ;; 语言核心绑定
 (provide #%module-begin #%app #%datum #%top)
@@ -57,17 +56,9 @@
                          [define 定义]
                          [begin 顺序求值]
                          [values 多值]))
- (all-from-out "racket/base-impl.rkt")
  (all-from-out "module.rkt")
  (all-from-out "racket/main.rkt")
- (all-from-out "json/main.rkt")
-
- ;; racket 特有绑定（不在 racket/base 中）
- (rename-out
-  [delay         延迟]
-  [force         求值]
-  [promise?      承诺?]
-  [command-line  命令行]))
+ (all-from-out "json/main.rkt"))
 
 ;; ============================================================
 ;; Reader 子模块 — 支持 #lang racket-cn
