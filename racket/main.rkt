@@ -42,6 +42,7 @@
   "keyword.rkt"
   "language-info.rkt"
   "lazy-require.rkt"
+  "linklet.rkt"
   "list.rkt"
   "local.rkt"
   "logging.rkt"
@@ -56,9 +57,13 @@
   "port.rkt"
   "prefab.rkt"
   "pretty.rkt"
+  "provide.rkt"
+  "provide-syntax.rkt"
   "promise.rkt"
   "random.rkt"
   "repl.rkt"
+  "require.rkt"
+  "require-syntax.rkt"
   "rerequire.rkt"
   "runtime-config.rkt"
   "runtime-path.rkt"
@@ -84,6 +89,7 @@
   "treelist.rkt"
   "udp.rkt"
   "undefined.rkt"
+  "unit-exptime.rkt"
   "unit.rkt"
   "unreachable.rkt"
   "vector.rkt")
@@ -123,6 +129,7 @@
          (all-from-out "keyword.rkt")
          (all-from-out "language-info.rkt")
          (all-from-out "lazy-require.rkt")
+         (all-from-out "linklet.rkt")
          (all-from-out "list.rkt")
          (all-from-out "local.rkt")
          (all-from-out "logging.rkt")
@@ -137,9 +144,13 @@
          (all-from-out "port.rkt")
          (all-from-out "prefab.rkt")
          (all-from-out "pretty.rkt")
+         (all-from-out "provide.rkt")
+         (all-from-out "provide-syntax.rkt")
          (all-from-out "promise.rkt")
          (all-from-out "random.rkt")
          (all-from-out "repl.rkt")
+         (all-from-out "require.rkt")
+         (all-from-out "require-syntax.rkt")
          (all-from-out "rerequire.rkt")
          (all-from-out "runtime-config.rkt")
          (all-from-out "runtime-path.rkt")
@@ -165,6 +176,7 @@
          (all-from-out "treelist.rkt")
          (all-from-out "udp.rkt")
          (all-from-out "undefined.rkt")
+         (all-from-out "unit-exptime.rkt")
          (all-from-out "unit.rkt")
          (all-from-out "unreachable.rkt")
          (all-from-out "vector.rkt"))
