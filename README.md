@@ -7,16 +7,35 @@ json、FFI、module.rkt，以及中文关键字参数翻译。翻译映射全部
 
 ## 安装
 
+> ⚠️ **注意**：`raco pkg install` 和 `raco link` 是两种不同的安装方式，**不能共存**。
+> 如果切换方式，请先按下方说明卸载旧安装。
+
+### 方式一：Git 安装（推荐）
+
 ```bash
-# 推荐：raco pkg install
 raco pkg install https://github.com/lu96-wow/racket-cn.git
+```
 
-# 本地开发：raco link
-cd /path/to/racket-cn && raco link racket-cn
+卸载：
 
-# 卸载
+```bash
 raco pkg remove racket-cn
-# 或 raco link -r racket-cn
+```
+
+### 方式二：本地开发
+
+```bash
+cd /path/to/racket-cn
+raco pkg install --link .
+```
+
+卸载（先解除链接，再删除包记录）：
+
+```bash
+raco link -r racket-cn
+# 如果上面命令无效，手动清理：
+rm -f $(raco link -s 2>/dev/null || echo ~/.local/share/racket/*/collects)/racket-cn
+raco pkg remove racket-cn
 ```
 
 ## 使用
