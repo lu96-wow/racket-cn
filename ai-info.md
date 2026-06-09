@@ -1,127 +1,156 @@
-# ai-info — racket-cn 绑定添加指南
+# racket-cn 翻译方式与文件总览
 
-> 给 AI 或贡献者的规范：如何添加中文绑定、哪些能改哪些不能改。
+> 记录项目中使用的所有翻译方式、各自适用场景、以及每个文件使用了哪种方式。
 
-## 绑定添加方式（3 种）
+## 一、翻译方式总览（4 种）
 
-### 方式 1：`rename-out`（标识符 → 中文别名）
+### 方式 1：`rename-out` — 标识符 → 中文别名
 
-用于：普通函数、宏、特殊形式。在 `base-impl.rkt` 或子模块 `.rkt` 中。
+**原理**：`(require racket/xxx)` 导入英文原版，再 `(provide (rename-out [eng 中文]))` 重导出。
 
+**适用**：普通函数、宏、特殊形式。这些绑定在 expander 的"Binding 解析"阶段建立，`rename-out` 正常工作。
+
+**文件模板**：
 ```racket
-;; base-impl.rkt
-(provide (rename-out [define 定义] [lambda 函数] ...))
-
-;; 子模块（如 list.rkt）
-(provide (rename-out [take 取前] [drop 去掉前] ...))
+#lang racket/base
+(require racket/xxx)
+(provide (rename-out [english-name 中文名] ...))
 ```
 
-**要求**：
-- 英文原名必须已通过 `require` 导入
-- Phase-1 绑定需要 `(provide (for-syntax (rename-out ...)))`
-- 子模块文件结构：`(require racket/xxx)` → `(provide (rename-out ...))`
+### 方式 2：`define-syntax` + `make-rename-transformer` — require/provide 子形式
 
-### 方式 2：`define-syntax` + `make-rename-transformer`（require/provide 子 form）
+**原理**：`(define-syntax 中文名 (make-rename-transformer #'english-name))` 创建本地 transformer binding。
 
-用于：`require`/`provide` 的子 form（`for-syntax`、`only-in`、`all-from-out` 等）。
-在 `module.rkt` 中。
+**适用**：`require` 和 `provide` 的子形式，如 `only-in`、`all-from-out`、`multi-in`、`matching-identifiers-out` 等。
 
+**为什么必须用这种方式**：require/provide 的内部子形式由 expander 通过 `free-identifier=?` 解析，需要 transformer 属性（`prop:require-transformer` / `prop:provide-transformer`）。`rename-out` 在模块间传递时无法正确保留这些属性，只有本地 `define-syntax` 创建的 binding 在所有位置都携带正确的 transformer 属性。
+
+**文件模板**：
 ```racket
-;; module.rkt
-(define-syntax 编译期 (make-rename-transformer #'for-syntax))
-(define-syntax 仅导入 (make-rename-transformer #'only-in))
+#lang racket/base
+(require racket/xxx
+         (for-syntax racket/base))
+(define-syntax 中文名 (make-rename-transformer #'english-name))
+(provide 中文名)
 ```
 
-**为什么不用 `rename-out`**：这些 form 在 require/provide 内部被 expander 通过
-`free-identifier=?` 解析，而 `rename-out` 只在模块顶层 provide 时生效。
-`define-syntax` 定义的 binding 在所有位置可用。
+### 方式 3：`定义-关键字函数` — 关键字参数翻译
 
-### 方式 3：`定义-关键字函数`（关键字参数函数）
+**原理**：`kw.rkt` 定义的宏。在编译期把带中文关键字参数的调用改写为带英文关键字参数的调用。
 
-用于：需要中文关键字参数的函数。在 `base-impl.rkt` 或 `file.rkt` 中。
+**适用**：带关键字参数的函数（如 `open-output-file`），需要同时翻译关键字名和关键字值。
 
+**格式**：
 ```racket
-(定义-关键字函数 打开输出文件 open-output-file
-  (#:如果存在 #:exists (截断 truncate) (替换 replace))
-  (#:模式 #:mode (文本 text)))
+(定义-关键字函数 中文函数名 英文函数名
+  (#:中文关键字 #:english-kw (中文值1 英文值1) (中文值2 英文值2)))
 ```
 
-**声明格式**：`(#:中文kw #:english-kw (中文val . english-val) ...)`
+**为什么 `rename-out` 不够**：Racket 的关键字参数（`#:exists`、`#:mode`）是独立的句法类别，不参与标识符绑定。`rename-out` 只能重命名标识符，无法触及关键字。
 
-定义后必须在模块末尾 `(provide 函数名 ...)`。
+### 方式 4：`for-syntax` — Phase-1 编译期绑定
 
-## 不能通过 rename 添加的 form
+**原理**：通过 `(provide (for-syntax (rename-out ...)))` 将中文别名提供到 phase 1，使它们在 `define-syntax` 体内可用。
 
-这些 form 在 expander 的 Phase 1（module-begin 扫描）被消费，
-早于 Phase 2 的 rename 绑定建立，因此 `rename-out` 或 `make-rename-transformer` 都无效：
+**适用**：macro writer 工具函数，如 `syntax-case`、`with-syntax`、`datum->syntax` 等。
 
-| form | 中文 | 替代方案 |
+**位置**：不在子模块文件中，统一在 `main.rkt` 的 `(provide (for-syntax ...))` 中提供。
+
+---
+
+## 二、不能翻译的 form（expander 时序限制）
+
+以下 form 在 expander 的 Module-begin 阶段被消费，早于 Binding 解析阶段，任何 rename 方式均无效：
+
+| form | 中文 | 说明 |
+|------|------|------|
+| `require` | `引用` | 模块顶层必须用英文 `require` |
+| `define-syntax-rule` | `定义语法规则` | 用 `定义语法` + `语法匹配` 替代 |
+| `#%module-begin` | — | 语言内核，不可替代 |
+| `#%app` `#%datum` `#%top` | — | 语言内核，不可替代 |
+
+---
+
+## 三、不可翻译的内核模块（`#%kernel` 层）
+
+以下标准 racket 模块使用 `(module xxx '#%kernel ...)` 编写，语言是内核而非 `racket/base`，无法用以上任何方式包装：
+
+| 模块 | 原因 |
+|------|------|
+| `kernel.rkt` | 包装 `#%kernel` 本身 |
+| `for-clause.rkt` | for 循环展开器的内核钩子 |
+| `phase+space.rkt` | 阶段/空间操作原语 |
+| `provide-transform.rkt` | provide 子形式的底层实现 |
+| `require-transform.rkt` | require 子形式的底层实现 |
+| `stxparam-exptime.rkt` | 语法参数展开期实现 |
+
+另有 4 个纯内部模块（`init.rkt`、`interactive.rkt`、`load.rkt`、`base.rkt`）无需翻译。
+
+---
+
+## 四、文件 → 翻译方式对照表
+
+### 顶层文件
+
+| 文件 | 职责 | 翻译方式 |
 |------|------|---------|
-| `require` | `引用` | 模块顶层必须用 `require`；`(require (引用 ...))` 也不行 |
-| `define-syntax-rule` | `定义语法规则` | 用 `定义语法` + `语法匹配` |
+| `main.rkt` | `#lang racket-cn` 和 `(require racket-cn)` 入口 | 方式4 (for-syntax phase-1) + 透传 `(all-from-out racket)` |
+| `base.rkt` | `#lang racket-cn/base` 入口 | 透传 base-impl + module.rkt |
+| `racket.rkt` | `(require racket-cn/racket)` 入口 | 透传 racket/main.rkt |
+| `module.rkt` | require/provide 顶层及其子形式 | 方式2 (define-syntax) |
+| `kw.rkt` | `定义-关键字函数` 宏实现 | —（基础设施） |
+| `translator.rkt` | 中英双向翻译器 | —（工具） |
+| `translator-data.rkt` | 翻译映射数据 | 由 translator 自动生成 |
 
-## 跨 Phase 注意事项
+### racket/ 子模块文件
 
-### Phase-1 绑定（macro writer 用）
+| 文件 | 翻译方式 | 中文别名数 |
+|------|---------|-----------|
+| `base-impl.rkt` | 方式1 (rename-out) + 方式3 (定义-关键字函数) | ~300 |
+| `list.rkt` | 方式1 (rename-out) | 24 |
+| `function.rkt` | 方式1 | 6 |
+| `string.rkt` | 方式1 | 4 |
+| `match.rkt` | 方式1 | 8 |
+| `math.rkt` | 方式1 | 24 |
+| `hash.rkt` | 方式1 | 9 |
+| `vector.rkt` | 方式1 | 23 |
+| `format.rkt` | 方式1 | 8 |
+| `promise.rkt` | 方式1 | 13 |
+| `class.rkt` | 方式1 | 若干 |
+| `contract.rkt` | 方式1 | 若干 |
+| `struct.rkt` | 方式1 | 若干 |
+| `syntax.rkt` | 方式1 | 若干 |
+| `...` | 方式1 | — |
+| **`provide.rkt`** ★ | **方式2 (define-syntax)** | 2 |
+| **`provide-syntax.rkt`** ★ | 方式1 (rename-out) | 1 |
+| **`require.rkt`** ★ | **方式2 (define-syntax)** | 5 |
+| **`require-syntax.rkt`** ★ | 方式1 (rename-out) | 1 |
+| **`linklet.rkt`** ★ | 方式1 | 36 |
+| **`unit-exptime.rkt`** ★ | 方式1 | 3 |
+| `file.rkt` | 方式1 + 方式3 | 若干 |
 
-这些在 `define-syntax` 体内可用。`base-impl.rkt` 通过 `(provide (for-syntax ...))` 提供：
+> ★ = 本次新增的 6 个模块
 
-```racket
-(provide (for-syntax (rename-out
-  [syntax-case 语法匹配]
-  [syntax-rules 语法规则]
-  [with-syntax 带语法]
-  [quasisyntax 准语法]
-  [unsyntax 反语法]
-  [syntax 语法]
-  [syntax->list 语法->列表]
-  [syntax->datum 语法->数据]
-  [datum->syntax 数据->语法]
-  [syntax-e 语法值]
-  [free-identifier=? 自由标识符等同?]
-  [bound-identifier=? 绑定标识符等同?]
-  [local-expand 局部展开])))
-```
+### 关键区分：`provide-syntax.rkt` vs `provide.rkt`
 
-Phase-1 需要显式 `(require (for-syntax racket-cn/base))` 才能使用中文语法工具（`语法匹配`、`带语法` 等），
-和标准 Racket 完全一致（标准 Racket 也需要 `(require (for-syntax racket/base))` 才能用 `syntax-case`）。
+- **`provide-syntax.rkt`**：`define-provide-syntax` 是**普通宏**（定义 provide 子形式的宏），不是 provide 子形式本身 → 可以用方式1 `rename-out`
+- **`provide.rkt`**：`matching-identifiers-out`、`filtered-out` 是 **provide 子形式本身** → 必须用方式2 `define-syntax`
 
-### `语法规则` 的使用限制
+`require-syntax.rkt` 和 `require.rkt` 的关系同理。
 
-和原版 `syntax-rules` 行为一致：
+---
 
-```racket
-;; ✅ 直用 form
-(定义语法 tt (语法规则 () [(_ x) #'x]))
+## 五、添加新子模块步骤
 
-;; ❌ 缩写 form（语法糖展开为 lambda，syntax-rules 返回 procedure 非 syntax）
-(定义语法 (tt stx) (语法规则 () [(_ x) #'x]))
-```
+1. 判断模块类型：
+   - 普通函数/宏 → 创建文件用**方式1** (`rename-out`)
+   - require/provide 子形式 → 创建文件用**方式2** (`define-syntax + make-rename-transformer`)
+2. 在 `racket/main.rkt` 的 `require` 列表按字母序添加 `"xxx.rkt"`
+3. 在 `racket/main.rkt` 的 `provide` 列表按字母序添加 `(all-from-out "xxx.rkt")`
+4. 重新生成翻译数据：`racket translator.rkt --gen-data`
 
-推荐使用 `语法匹配`，两种 form 都支持。
+## 六、测试
 
-## 文件职责
-
-| 文件 | 职责 | 添加方式 |
-|------|------|---------|
-| `base-impl.rkt` | racket/base 核心绑定 + 关键字函数 | rename-out, 定义-关键字函数 |
-| `module.rkt` | require/provide 子 form | define-syntax + make-rename-transformer |
-| `file.rkt` 等 | 子模块绑定 | rename-out, 定义-关键字函数 |
-| `kw.rkt` | 定义-关键字函数 宏实现 | 不需要改 |
-| `main.rkt` | #lang racket-cn 入口 | require 新子模块 + provide |
-| `translator.rkt` | 中英双向翻译器 | 自动扫描所有源文件，无需手动更新 |
-| `translator-data.rkt` | 翻译映射数据（自动生成）| 由 `racket translator.rkt --gen-data` 生成 |
-
-## 添加新子模块步骤
-
-1. 创建 `xxx.rkt`：`(require racket/xxx)` → `(provide (rename-out [...]))`
-2. 在 `main.rkt` 的 `require` 列表添加 `"xxx.rkt"`
-3. 在 `main.rkt` 的 `provide` 列表添加 `(all-from-out "xxx.rkt")`
-4. 更新 README.md 文件结构
-5. 重新生成翻译数据：`racket translator.rkt --gen-data`
-
-## 测试
-
-- `test-lang.rkt` — #lang racket-cn 冒烟测试
-- `test-translator.rkt` — 104 项翻译器测试
+- `test-lang.rkt` — `#lang racket-cn` 冒烟测试
+- `test-translator.rkt` — 翻译器测试
 - 添加新绑定后两条都要跑
