@@ -22,6 +22,7 @@
  翻译文件
  翻译语法
  翻译字符串
+ 翻译模块路径
  英->中
  中->英
  标识符-翻译表
@@ -311,11 +312,35 @@
              [else stx]))]))))
 
 ;; ============================================================
-;; 9. 字符串/文件翻译
+;; 9. 模块路径翻译（#lang / require 中的 racket ↔ racket-cn）
+;; ============================================================
+
+(define (翻译模块路径 str #:方向 [方向 '英->中])
+  "将字符串中的 #lang racket、#lang racket/...、(require racket/...) 替换为对应中文/英文版本"
+  (cond
+    [(eq? 方向 '英->中)
+     ;; 顺序重要：先替换 #lang 相关的更具体模式，再做通用 racket/ → racket-cn/ 替换
+     (let* ([s (regexp-replace* #rx"#lang racket/" str "#lang racket-cn/")]
+            [s (regexp-replace* #rx"(?m:#lang racket(?=\\s|$))" s "#lang racket-cn")]
+            ;; 通用：所有 racket/ 替换为 racket-cn/（覆盖 require、provide、import 等）
+            [s (regexp-replace* #rx"racket/" s "racket-cn/")])
+       s)]
+    [(eq? 方向 '中->英)
+     ;; 先替换 #lang 相关的，再做通用 racket-cn/ → racket/ 替换
+     (let* ([s (regexp-replace* #rx"#lang racket-cn/" str "#lang racket/")]
+            [s (regexp-replace* #rx"(?m:#lang racket-cn(?=\\s|$))" s "#lang racket")]
+            ;; 通用：所有 racket-cn/ 替换为 racket/（覆盖 引用、provide 等中文形式）
+            [s (regexp-replace* #rx"racket-cn/" s "racket/")])
+       s)]
+    [else str]))
+
+;; ============================================================
+;; 9b. 字符串/文件翻译
 ;; ============================================================
 
 (define (翻译字符串 str #:方向 [方向 '英->中])
-  (define in (open-input-string str))
+  (define preprocessed (翻译模块路径 str #:方向 方向))
+  (define in (open-input-string preprocessed))
   (define out (open-output-string))
   (let loop ()
     (define stx (read-syntax "translation-input" in))
@@ -334,8 +359,9 @@
       [(string-prefix? 内容 "#lang")
        (let* ([lines (string-split 内容 "\n")]
               [lang-line (first lines)]
+              [translated-lang (翻译模块路径 lang-line #:方向 方向)]
               [rest-lines (string-join (rest lines) "\n")])
-         (string-append lang-line "\n" (翻译字符串 rest-lines #:方向 方向)))]
+         (string-append translated-lang "\n" (翻译字符串 rest-lines #:方向 方向)))]
       [else (翻译字符串 内容 #:方向 方向)]))
   (if 输出路径
       (begin

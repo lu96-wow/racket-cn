@@ -84,4 +84,16 @@
 (check-equal? (翻译代码 "()" #:方向 '英->中) "()\n" "空列表")
 (check-equal? (翻译代码 "()" #:方向 '中->英) "()\n" "空列表中->英")
 
+;; ============ 模块路径翻译 ============
+;; 直接测试 翻译模块路径（字符串级别，不经过 read-syntax）
+;; #lang racket ↔ #lang racket-cn
+(check-true (string-contains? (翻译模块路径 "#lang racket" #:方向 '英->中) "#lang racket-cn") "#lang racket -> #lang racket-cn")
+(check-true (string-contains? (翻译模块路径 "#lang racket-cn" #:方向 '中->英) "#lang racket") "#lang racket-cn -> #lang racket")
+;; #lang racket/... ↔ #lang racket-cn/...
+(check-true (string-contains? (翻译模块路径 "#lang racket/base" #:方向 '英->中) "#lang racket-cn/base") "#lang racket/base -> #lang racket-cn/base")
+(check-true (string-contains? (翻译模块路径 "#lang racket-cn/base" #:方向 '中->英) "#lang racket/base") "#lang racket-cn/base -> #lang racket/base")
+;; (require racket/...) ↔ (require racket-cn/...) — 通过 翻译字符串
+(check-true (翻译后包含? "(require racket/list)" "racket-cn/list") "(require racket/list) -> racket-cn/list")
+(check-true (翻译后包含? "(require racket-cn/list)" "racket/list" #:方向 '中->英) "(require racket-cn/list) -> racket/list")
+
 (printf "\n全部测试完成!\n")
