@@ -254,7 +254,6 @@
   [raise-argument-error 引发参数错误]
   [raise-syntax-error 引发语法错误]
       ;; ========== 线程 ==========
-  [thread 线程]
   [thread? 线程?]
   [sleep 睡眠]
   [kill-thread 终止线程]
@@ -346,20 +345,62 @@
 ;; 4. 关键字函数中文包装（宏翻译 #:如果存在 → #:exists 等）
 ;; ============================================================
 (定义-关键字函数 打开输入文件 open-input-file
-          (#:如果存在 #:exists (截断 truncate) (替换 replace) (追加 append)
-           (更新 update) (可更新 can-update)))
+          (#:模式 #:mode (二进制 binary) (文本 text))
+          (#:为模块? #:for-module?))
 
 (定义-关键字函数 打开输出文件 open-output-file
-          (#:如果存在 #:exists (截断 truncate) (替换 replace) (追加 append)
-           (更新 update) (可更新 can-update))
-          (#:模式 #:mode (文本 text) (字节 binary)))
+          (#:如果存在 #:exists (错误 error) (截断 truncate) (替换 replace)
+           (追加 append) (更新 update) (可更新 can-update)
+           (必须截断 must-truncate) (截断或替换 truncate/replace))
+          (#:模式 #:mode (二进制 binary) (文本 text))
+          (#:权限 #:permissions)
+          (#:替换权限? #:replace-permissions?))
+
+(定义-关键字函数 打开输入输出文件 open-input-output-file
+          (#:如果存在 #:exists (错误 error) (截断 truncate) (替换 replace)
+           (追加 append) (更新 update) (可更新 can-update)
+           (必须截断 must-truncate) (截断或替换 truncate/replace))
+          (#:模式 #:mode (二进制 binary) (文本 text))
+          (#:权限 #:permissions)
+          (#:替换权限? #:replace-permissions?))
 
 (定义-关键字函数 调用-输入文件 call-with-input-file
-          (#:如果存在 #:exists (截断 truncate) (替换 replace) (追加 append)
-           (更新 update)))
+          (#:模式 #:mode (二进制 binary) (文本 text)))
 
 (定义-关键字函数 调用-输出文件 call-with-output-file
-          (#:如果存在 #:exists (截断 truncate) (替换 replace) (追加 append))
-          (#:模式 #:mode (文本 text)))
+          (#:如果存在 #:exists (错误 error) (截断 truncate) (替换 replace)
+           (追加 append) (更新 update) (可更新 can-update)
+           (必须截断 must-truncate) (截断或替换 truncate/replace))
+          (#:模式 #:mode (二进制 binary) (文本 text))
+          (#:权限 #:permissions)
+          (#:替换权限? #:replace-permissions?))
 
-(provide 打开输入文件 打开输出文件 调用-输入文件 调用-输出文件)
+(定义-关键字函数 调用-输入文件* call-with-input-file*
+          (#:模式 #:mode (二进制 binary) (文本 text)))
+
+(定义-关键字函数 调用-输出文件* call-with-output-file*
+          (#:如果存在 #:exists (错误 error) (截断 truncate) (替换 replace)
+           (追加 append) (更新 update) (可更新 can-update)
+           (必须截断 must-truncate) (截断或替换 truncate/replace))
+          (#:模式 #:mode (二进制 binary) (文本 text))
+          (#:权限 #:permissions)
+          (#:替换权限? #:replace-permissions?))
+
+(定义-关键字函数 以文件输入 with-input-from-file
+          (#:模式 #:mode (二进制 binary) (文本 text)))
+
+(定义-关键字函数 以文件输出 with-output-to-file
+          (#:如果存在 #:exists (错误 error) (截断 truncate) (替换 replace)
+           (追加 append) (更新 update) (可更新 can-update)
+           (必须截断 must-truncate) (截断或替换 truncate/replace))
+          (#:模式 #:mode (二进制 binary) (文本 text))
+          (#:权限 #:permissions)
+          (#:替换权限? #:replace-permissions?))
+
+(定义-关键字函数 线程 thread
+          (#:池 #:pool (独自 own))
+          (#:保留 #:keep (结果 results)))
+
+(provide 打开输入文件 打开输出文件 打开输入输出文件
+         调用-输入文件 调用-输出文件 调用-输入文件* 调用-输出文件*
+         以文件输入 以文件输出 线程)

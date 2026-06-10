@@ -22,4 +22,5 @@
   [place-message-allowed? 位置消息允许?]
   [place-location? 位置定位?]
   [processor-count 处理器数量]
+  [prop:place-location 属性:位置定位]
 )
