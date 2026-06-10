@@ -1,6 +1,7 @@
 # 展开器分层 & rename 限制
 
-`racket-cn` 用 `rename-out` 将标识符映射到中文。绝大多数 form 正常工作，
+`racket-cn` 用 `rename-define` / `rename-define/for-syntax` 宏（`rename-macro.rkt`）
+将标识符映射到中文。绝大多数 form 正常工作，
 但有少量在 rename 绑定建立**之前**就被 expander 消费，因此无法改名。
 
 ## 展开器处理时序
@@ -47,9 +48,10 @@
 
 ## Phase-1 绑定
 
-`base-impl.rkt` 的 `(provide (for-syntax (rename-out ...)))` 已将
-`syntax-case`/`语法匹配`、`with-syntax`/`带语法` 等 12 个 macro writer 工具
-提供到 phase 1。在 `define-syntax` 体内可用。
+`main.rkt` 的 `(rename-define/for-syntax ...)`（30 个 form）和
+`stxparam.rkt` 的 `(rename-define/for-syntax ...)`（2 个 form）已将
+`syntax-case`/`语法匹配`、`with-syntax`/`带语法`、`lambda`/`函数`、
+`if`/`如果` 等编译期工具提供到 phase 1。在 `define-syntax` 体内可用。
 
 Phase-1 只有 `racket/base` 的英文绑定，中文 IO 函数不可用。
 

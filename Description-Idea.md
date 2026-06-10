@@ -78,11 +78,12 @@
 
 ### 2.1 为什么不能只用 `rename-out`
 
-`rename-out` 是 racket-cn 翻译普通标识符的核心机制：
+`rename-define`（`rename-macro.rkt`）是 racket-cn 翻译普通标识符的核心机制：
 
 ```racket
-(provide (rename-out [define 定义]
-                     [lambda 函数]))
+(rename-define [define 定义]
+               [lambda 函数])
+; 展开为 (provide (rename-out [define 定义] [lambda 函数]))
 ```
 
 这能把 `定义` 重定向到 `define`，把 `函数` 重定向到 `lambda`。但它**只对标识符有效**。

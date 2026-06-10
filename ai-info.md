@@ -2,20 +2,27 @@
 
 > 记录项目中使用的所有翻译方式、各自适用场景、以及每个文件使用了哪种方式。
 
-## 一、翻译方式总览（4 种）
+## 一、翻译方式总览（5 种）
 
-### 方式 1：`rename-out` — 标识符 → 中文别名
+### 方式 1：`rename-define` — 标识符 → 中文别名（推荐）
 
-**原理**：`(require racket/xxx)` 导入英文原版，再 `(provide (rename-out [eng 中文]))` 重导出。
+**原理**：`(require racket/xxx "../rename-macro.rkt")` 导入英文原版和宏定义，
+再 `(rename-define [eng 中文] ...)` 生成 `(provide (rename-out ...))` 展开。
 
-**适用**：普通函数、宏、特殊形式。这些绑定在 expander 的"Binding 解析"阶段建立，`rename-out` 正常工作。
+**适用**：普通函数、宏、特殊形式。这些绑定在 expander 的"Binding 解析"阶段建立，正常重命名。
 
 **文件模板**：
 ```racket
 #lang racket/base
-(require racket/xxx)
-(provide (rename-out [english-name 中文名] ...))
+(require racket/xxx "../rename-macro.rkt")
+(rename-define [english-name 中文名] ...)
 ```
+
+### 方式 1b：`rename-define/for-syntax` — Phase-1 编译期绑定
+
+**原理**：同方式 1，但展开为 `(provide (for-syntax (rename-out ...)))`，将中文别名提供到 phase 1。
+
+**适用**：macro writer 工具函数，如 `syntax-case`、`make-parameter-rename-transformer` 等。
 
 ### 方式 2：`define-syntax` + `make-rename-transformer` — require/provide 子形式
 
@@ -94,7 +101,7 @@
 
 | 文件 | 职责 | 翻译方式 |
 |------|------|---------|
-| `main.rkt` | `#lang racket-cn` 和 `(require racket-cn)` 入口 | 方式4 (for-syntax phase-1) + 透传 `(all-from-out racket)` |
+| `main.rkt` | `#lang racket-cn` 和 `(require racket-cn)` 入口 | 方式1b (rename-define/for-syntax, 30 form) + 透传 |
 | `base.rkt` | `#lang racket-cn/base` 入口 | 透传 base-impl + module.rkt |
 | `racket.rkt` | `(require racket-cn/racket)` 入口 | 透传 racket/main.rkt |
 | `module.rkt` | require/provide 顶层及其子形式 | 方式2 (define-syntax) |
@@ -106,8 +113,8 @@
 
 | 文件 | 翻译方式 | 中文别名数 |
 |------|---------|-----------|
-| `base-impl.rkt` | 方式1 (rename-out) + 方式3 (定义-关键字函数) | ~300 |
-| `list.rkt` | 方式1 (rename-out) | 24 |
+| `base-impl.rkt` | 方式1 (rename-define) + 方式3 (定义-关键字函数) | ~300 |
+| `list.rkt` | 方式1 | 24 |
 | `function.rkt` | 方式1 | 6 |
 | `string.rkt` | 方式1 | 4 |
 | `match.rkt` | 方式1 | 8 |
@@ -120,20 +127,19 @@
 | `contract.rkt` | 方式1 | 若干 |
 | `struct.rkt` | 方式1 | 若干 |
 | `syntax.rkt` | 方式1 | 若干 |
-| `...` | 方式1 | — |
-| **`provide.rkt`** ★ | **方式2 (define-syntax)** | 2 |
-| **`provide-syntax.rkt`** ★ | 方式1 (rename-out) | 1 |
-| **`require.rkt`** ★ | **方式2 (define-syntax)** | 5 |
-| **`require-syntax.rkt`** ★ | 方式1 (rename-out) | 1 |
-| **`linklet.rkt`** ★ | 方式1 | 36 |
-| **`unit-exptime.rkt`** ★ | 方式1 | 3 |
-| `file.rkt` | 方式1 + 方式3 | 若干 |
-
-> ★ = 本次新增的 6 个模块
+| `stxparam.rkt` | 方式1 + 方式1b (rename-define/for-syntax, 2 form) | 5 |
+| `...` | 方式1 (rename-define) | — |
+| **`provide.rkt`** | **方式2 (define-syntax)** | 2 |
+| **`provide-syntax.rkt`** | 方式1 (rename-define) | 1 |
+| **`require.rkt`** | **方式2 (define-syntax)** | 5 |
+| **`require-syntax.rkt`** | 方式1 (rename-define) | 1 |
+| `linklet.rkt` | 方式1 (rename-define) | 36 |
+| `unit-exptime.rkt` | 方式1 (rename-define) | 3 |
+| `file.rkt` | 方式1 (rename-define) + 方式3 | 若干 |
 
 ### 关键区分：`provide-syntax.rkt` vs `provide.rkt`
 
-- **`provide-syntax.rkt`**：`define-provide-syntax` 是**普通宏**（定义 provide 子形式的宏），不是 provide 子形式本身 → 可以用方式1 `rename-out`
+- **`provide-syntax.rkt`**：`define-provide-syntax` 是**普通宏**（定义 provide 子形式的宏），不是 provide 子形式本身 → 可以用方式1 `rename-define`
 - **`provide.rkt`**：`matching-identifiers-out`、`filtered-out` 是 **provide 子形式本身** → 必须用方式2 `define-syntax`
 
 `require-syntax.rkt` 和 `require.rkt` 的关系同理。
@@ -143,11 +149,13 @@
 ## 五、添加新子模块步骤
 
 1. 判断模块类型：
-   - 普通函数/宏 → 创建文件用**方式1** (`rename-out`)
+   - 普通函数/宏 → 创建文件用**方式1** (`rename-define`)
    - require/provide 子形式 → 创建文件用**方式2** (`define-syntax + make-rename-transformer`)
-2. 在 `racket/main.rkt` 的 `require` 列表按字母序添加 `"xxx.rkt"`
-3. 在 `racket/main.rkt` 的 `provide` 列表按字母序添加 `(all-from-out "xxx.rkt")`
-4. 重新生成翻译数据：`racket translator.rkt --gen-data`
+   - Phase-1 编译期绑定 → 用**方式1b** (`rename-define/for-syntax`)
+2. 无论哪种方式，文件头部添加 `(require "<相对路径>/rename-macro.rkt")`
+3. 在 `racket/main.rkt` 的 `require` 列表按字母序添加 `"xxx.rkt"`
+4. 在 `racket/main.rkt` 的 `provide` 列表按字母序添加 `(all-from-out "xxx.rkt")`
+5. 重新生成翻译数据：`racket translator.rkt --gen-data`
 
 ## 六、测试
 

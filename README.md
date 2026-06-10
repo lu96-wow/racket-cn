@@ -2,7 +2,7 @@
 
 Racket 语言的中文版本。提供 `#lang racket-cn` 和 `#lang racket-cn/base`。
 
-覆盖 **1176 条**中英文翻译对，涵盖 racket/base 核心、82 个 racket/ 子模块、
+覆盖 **~1180 条**中英文翻译对，涵盖 racket/base 核心、88 个 racket/ 子模块、
 json、FFI、module.rkt，以及中文关键字参数翻译。翻译映射全部从源文件自动扫描生成。
 
 ## 安装
@@ -169,7 +169,7 @@ racket translator.rkt --dir src/ out/     # 递归翻译目录
 
 - 宏定义用 `定义语法` + `语法匹配`，`定义语法规则` 改名后模块层不识别
 - `语法规则` 只能在 `(定义语法 name (语法规则 ...))` 直用 form 下工作
-- Phase-1 中文绑定（`语法匹配`、`函数`、`如果` 等 30 个）已通过 `main.rkt` 的 `(for-syntax ...)` 提供，和 `(require (for-syntax racket/base))` 对称
+- Phase-1 中文绑定（`语法匹配`、`函数`、`如果` 等 32 个）已通过 `main.rkt`（30 个）和 `stxparam.rkt`（2 个）的 `rename-define/for-syntax` 提供，和 `(require (for-syntax racket/base))` 对称
 - 映射表由 `translator.rkt` 自动扫描源文件生成，添加新模块后运行 `racket translator.rkt --gen-data` 即可
 
 ## 覆盖
@@ -177,10 +177,10 @@ racket translator.rkt --dir src/ out/     # 递归翻译目录
 | 集合 | 模块数 | 说明 |
 |------|--------|------|
 | racket/base 核心 | 1 | 定义、函数、如果、令… + 关键字参数翻译 |
-| racket/* 子模块 | 82 | 对应 /usr/racket/collects/racket/*.rkt |
+| racket/* 子模块 | 88 | 对应 /usr/racket/collects/racket/*.rkt |
 | json | 1 | JSON 处理中文别名 |
 | ffi/unsafe | 6 | FFI 中文别名（malloc、ptr-ref…） |
 | module.rkt | 1 | require/provide 子 form 中文原语 |
-| **总计** | **1176 条映射** | |
+| **总计** | **~1180 条映射** | |
 
 完整限制参考 [局限.md](局限.md)。
