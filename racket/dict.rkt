@@ -1,7 +1,8 @@
 #lang racket/base
 (require racket/dict)
-(provide
- (rename-out
+(require "../rename-macro.rkt")
+
+(rename-define
   [dict? 字典?]
   [dict-ref 字典-引用]
   [dict-set 字典-设置]
@@ -11,4 +12,5 @@
   [dict-count 字典-计数]
   [dict->list 字典->列表]
   [dict-copy 字典-复制]
-  [dict-map 字典-映射]))
+  [dict-map 字典-映射]
+)

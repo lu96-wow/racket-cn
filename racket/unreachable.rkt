@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/unreachable)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [with-assert-unreachable 带断言不可达]))
+(rename-define
+  [with-assert-unreachable 带断言不可达]
+)

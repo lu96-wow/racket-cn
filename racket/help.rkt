@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/help)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [help 帮助]))
+(rename-define
+  [help 帮助]
+)

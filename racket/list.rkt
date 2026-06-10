@@ -1,7 +1,8 @@
 #lang racket/base
 (require racket/list)
-(provide
- (rename-out
+(require "../rename-macro.rkt")
+
+(rename-define
   [take 取前]
   [drop 去掉前]
   [split-at 切分]
@@ -29,4 +30,5 @@
   [last 最后一个]
   [cons? 有对?]
   [make-list 制造列表]
-  [range 范围]))
+  [range 范围]
+)

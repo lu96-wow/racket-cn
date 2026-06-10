@@ -1,7 +1,9 @@
 #lang racket/base
 (require racket/future)
-(provide
- (rename-out
+(require "../rename-macro.rkt")
+
+(rename-define
   [future 未来]
   [touch 触碰]
-  [future? 未来?]))
+  [future? 未来?]
+)

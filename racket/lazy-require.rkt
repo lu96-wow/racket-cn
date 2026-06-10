@@ -1,7 +1,8 @@
 #lang racket/base
 (require racket/lazy-require)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [lazy-require 延迟引用]
-   [lazy-require-syntax 延迟引用语法]))
+(rename-define
+  [lazy-require 延迟引用]
+  [lazy-require-syntax 延迟引用语法]
+)

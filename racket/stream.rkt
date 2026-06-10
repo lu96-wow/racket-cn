@@ -1,7 +1,8 @@
 #lang racket/base
 (require racket/stream)
-(provide
- (rename-out
+(require "../rename-macro.rkt")
+
+(rename-define
   [stream 流]
   [stream? 流?]
   [stream-cons 流-对]
@@ -12,4 +13,5 @@
   [in-stream 在流]
   [stream-map 流-映射]
   [stream-filter 流-过滤]
-  [stream-fold 流-折叠]))
+  [stream-fold 流-折叠]
+)

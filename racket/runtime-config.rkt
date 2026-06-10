@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/runtime-config)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [configure 配置]))
+(rename-define
+  [configure 配置]
+)

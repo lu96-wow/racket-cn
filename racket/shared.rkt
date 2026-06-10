@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/shared)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [shared 共享]))
+(rename-define
+  [shared 共享]
+)

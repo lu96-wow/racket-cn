@@ -1,7 +1,8 @@
 #lang racket/base
 (require racket/fasl)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [fasl->s-exp 快速加载->S表达式]
-   [s-exp->fasl S表达式->快速加载]))
+(rename-define
+  [fasl->s-exp 快速加载->S表达式]
+  [s-exp->fasl S表达式->快速加载]
+)

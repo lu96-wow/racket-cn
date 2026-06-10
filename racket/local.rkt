@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/local)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [local 局部]))
+(rename-define
+  [local 局部]
+)

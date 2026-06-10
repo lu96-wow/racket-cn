@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/block)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [block 阻塞]))
+(rename-define
+  [block 阻塞]
+)

@@ -1,5 +1,7 @@
 #lang racket/base
 (require racket/require-syntax)
-(provide
- (rename-out
-  [define-require-syntax 定义引用语法]))
+(require "../rename-macro.rkt")
+
+(rename-define
+  [define-require-syntax 定义引用语法]
+)

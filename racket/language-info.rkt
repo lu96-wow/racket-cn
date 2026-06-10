@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/language-info)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [get-info 获取信息]))
+(rename-define
+  [get-info 获取信息]
+)

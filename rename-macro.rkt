@@ -18,11 +18,14 @@
 ;;
 ;; 用 map + quasisyntax 在编译期展平子句，
 ;; 再用 with-syntax 将结果注入模板，全程保持词法上下文。
+;;
+;; rename-define/for-syntax — 同 rename-define，但包装在 for-syntax 中，
+;; 用于 phase-1 编译期绑定。
 ;; ============================================================
 
 (require (for-syntax racket/base))
 
-(provide rename-define)
+(provide rename-define rename-define/for-syntax)
 
 (define-syntax (rename-define stx)
   (syntax-case stx ()
@@ -41,3 +44,18 @@
        (with-syntax ([(rename-pair ...) pairs])
          #'(provide
              (rename-out rename-pair ...))))]))
+
+(define-syntax (rename-define/for-syntax stx)
+  (syntax-case stx ()
+    [(_ [eng cn ...] ...)
+     (let ([pairs
+            (apply append
+                   (map (lambda (e-stx cn-stxs)
+                          (map (lambda (c-stx)
+                                 #`[#,e-stx #,c-stx])
+                               (syntax->list cn-stxs)))
+                        (syntax->list #'(eng ...))
+                        (syntax->list #'((cn ...) ...))))])
+       (with-syntax ([(rename-pair ...) pairs])
+         #'(provide
+             (for-syntax (rename-out rename-pair ...)))))]))

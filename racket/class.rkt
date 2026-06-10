@@ -1,7 +1,8 @@
 #lang racket/base
 (require racket/class)
-(provide
- (rename-out
+(require "../rename-macro.rkt")
+
+(rename-define
   [class 类]
   [class* 类*]
   [new 新建]
@@ -14,4 +15,5 @@
   [init-field 初始字段]
   [inherit 继承]
   [super 父类]
-  [this 自身]))
+  [this 自身]
+)

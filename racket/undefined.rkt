@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/undefined)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [undefined 未定义]))
+(rename-define
+  [undefined 未定义]
+)

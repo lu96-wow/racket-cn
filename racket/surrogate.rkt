@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/surrogate)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [surrogate 代理]))
+(rename-define
+  [surrogate 代理]
+)

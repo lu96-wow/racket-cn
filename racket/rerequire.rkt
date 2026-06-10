@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/rerequire)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [dynamic-rerequire 动态重引用]))
+(rename-define
+  [dynamic-rerequire 动态重引用]
+)

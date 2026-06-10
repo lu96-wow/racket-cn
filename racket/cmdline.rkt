@@ -1,7 +1,8 @@
 #lang racket/base
 (require racket/cmdline)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [command-line 命令行]
-   [parse-command-line 解析命令行]))
+(rename-define
+  [command-line 命令行]
+  [parse-command-line 解析命令行]
+)

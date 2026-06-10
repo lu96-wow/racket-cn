@@ -1,7 +1,8 @@
 #lang racket/base
 (require racket/contract)
-(provide
- (rename-out
+(require "../rename-macro.rkt")
+
+(rename-define
   [contract 合约]
   [contract-out 合约导出]
   [define/contract 定义/合约]
@@ -13,4 +14,5 @@
   [between/c 区间/合约]
   [or/c 或/合约]
   [and/c 且/合约]
-  [not/c 非/合约]))
+  [not/c 非/合约]
+)

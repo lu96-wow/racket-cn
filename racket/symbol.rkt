@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/symbol)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [symbol->immutable-string 符号->不可变字符串]))
+(rename-define
+  [symbol->immutable-string 符号->不可变字符串]
+)

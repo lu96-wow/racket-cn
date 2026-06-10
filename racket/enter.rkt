@@ -1,7 +1,8 @@
 #lang racket/base
 (require racket/enter)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [enter! 进入!]
-   [dynamic-enter! 动态进入!]))
+(rename-define
+  [enter! 进入!]
+  [dynamic-enter! 动态进入!]
+)

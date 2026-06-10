@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/syntax-srcloc)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [syntax-srcloc 语法源位置]))
+(rename-define
+  [syntax-srcloc 语法源位置]
+)

@@ -1,6 +1,7 @@
 #lang racket/base
 (require racket/interaction-info)
+(require "../rename-macro.rkt")
 
-(provide
- (rename-out
-   [current-interaction-info 当前交互信息]))
+(rename-define
+  [current-interaction-info 当前交互信息]
+)
