@@ -2,7 +2,7 @@
 
 Racket 语言的中文版本。提供 `#lang racket-cn` 和 `#lang racket-cn/base`。
 
-覆盖 **~1180 条**中英文翻译对，涵盖 racket/base 核心、88 个 racket/ 子模块、
+覆盖 **~1380 条**中英文翻译对，涵盖 racket/base 核心、88 个 racket/ 子模块、
 json、FFI、module.rkt，以及中文关键字参数翻译。
 
 ## 安装
@@ -139,6 +139,64 @@ rm -f $(raco link -s 2>/dev/null || echo ~/.local/share/racket/*/collects)/racke
 (指针-引用 ptr 类型-整数 0)                  ; ptr-ref
 (FFI库 "libc")                              ; ffi-lib
 ```
+## 翻译器
+
+`racket-cn/translator` 提供双向翻译工具，可将英文 Racket 代码翻译为中文，反之亦然。
+
+```racket
+(require racket-cn/translator)
+```
+
+### 更新映射表
+
+翻译器依赖自动生成的映射表。安装后应先运行一次，之后修改源码中的翻译对后也需重新运行：
+
+```racket
+(update-translator-map)  ;; 重新扫描源文件，生成 ~1380 条映射
+```
+
+### 文件翻译
+
+```racket
+;; 英文 → 中文
+(en-to-cn "src.rkt" "out.rkt")
+
+;; 中文 → 英文
+(cn-to-en "src.rkt" "out.rkt")
+
+;; 静默覆盖（跳过确认提示）
+(en-to-cn "src.rkt" "out.rkt" #:confirm? #f)
+```
+
+输出文件已存在时会交互确认：`y`覆盖 / `n`跳过 / `a`全部覆盖 / `q`退出。
+
+### 目录翻译
+
+递归翻译整个目录中的 `.rkt` 文件，保持目录结构：
+
+```racket
+;; 英文目录 → 中文目录
+(en-to-cn-folder "racket-src/" "racket-src-cn/")
+
+;; 中文目录 → 英文目录
+(cn-to-en-folder "racket-src-cn/" "racket-src-en/")
+```
+
+目录翻译会先列出所有将被覆盖的文件，再逐个询问确认。
+
+### 翻译内容
+
+| 项目 | 示例 |
+|------|------|
+| `#lang` 行 | `#lang racket` ↔ `#lang racket-cn` |
+| 标识符 | `define` ↔ `定义`, `lambda` ↔ `函数` |
+| 关键字 | `#:exists` ↔ `#:如果存在` |
+| 模块路径 | `racket/list` ↔ `racket-cn/racket/list` |
+| 特殊模块 | `json` ↔ `racket-cn/json`, `ffi/unsafe` ↔ `racket-cn/ffi/unsafe` |
+| require 子形式 | `only-in`, `prefix-in`, `for-syntax` 等保留结构，仅翻译路径 |
+
+> 字符串和数字原样保留，不会被翻译。
+
 ## 注意事项
 
 - 宏定义用 `定义语法` + `语法匹配`，`定义语法规则` 改名后模块层不识别
@@ -154,6 +212,6 @@ rm -f $(raco link -s 2>/dev/null || echo ~/.local/share/racket/*/collects)/racke
 | json | 1 | JSON 处理中文别名 |
 | ffi/unsafe | 6 | FFI 中文别名（malloc、ptr-ref…） |
 | module.rkt | 1 | require/provide 子 form 中文原语 |
-| **总计** | **~1180 条映射** | |
+| **总计** | **~1380 条映射** | |
 
 完整限制参考 [局限.md](局限.md)。
