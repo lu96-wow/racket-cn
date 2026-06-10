@@ -24,7 +24,7 @@ raco pkg install https://github.com/lu96-wow/racket-cn.git
 ```bash
 git clone https://github.com/lu96-wow/racket-cn.git
 cd racket-cn
-raco pkg install --link .
+raco pkg install --link
 ```
 
 ### 链接安装
@@ -33,7 +33,7 @@ raco pkg install --link .
 
 ```bash
 cd /path/to/racket-cn
-raco pkg install --link .
+raco pkg install --link
 ```
 
 ### 卸载
