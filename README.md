@@ -11,10 +11,10 @@ json、FFI、module.rkt，以及中文关键字参数翻译。翻译映射全部
 
 ### 远程安装（推荐）
 
-从 Racket 包目录直接安装：
+从 GitHub 直接安装：
 
 ```bash
-raco pkg install racket-cn/
+raco pkg install https://github.com/lu96-wow/racket-cn.git
 ```
 
 ### Git 安装
