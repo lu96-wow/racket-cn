@@ -3,7 +3,7 @@
 Racket 语言的中文版本。提供 `#lang racket-cn` 和 `#lang racket-cn/base`。
 
 覆盖 **~1180 条**中英文翻译对，涵盖 racket/base 核心、88 个 racket/ 子模块、
-json、FFI、module.rkt，以及中文关键字参数翻译。翻译映射全部从源文件自动扫描生成。
+json、FFI、module.rkt，以及中文关键字参数翻译。
 
 ## 安装
 
@@ -68,7 +68,6 @@ rm -f $(raco link -s 2>/dev/null || echo ~/.local/share/racket/*/collects)/racke
 ```racket
 #lang racket-cn           ;; 完整版（racket/base + 全部子模块）
 #lang racket-cn/base      ;; 基础版（仅 racket/base）
-#lang racket-cn/translator ;; 翻译器脚本模式
 ```
 
 ### 子模块引用
@@ -140,37 +139,11 @@ rm -f $(raco link -s 2>/dev/null || echo ~/.local/share/racket/*/collects)/racke
 (指针-引用 ptr 类型-整数 0)                  ; ptr-ref
 (FFI库 "libc")                              ; ffi-lib
 ```
-
-### 翻译器
-
-```racket
-#lang racket-cn/translator
-
-;; 单文件
-(翻译文件-英->中 "input.rkt")
-(翻译文件-英->中 "input.rkt" "output-cn.rkt")
-(翻译文件-中->英 "input-cn.rkt" "output-en.rkt")
-
-;; 目录递归
-(翻译文件夹-英->中 "src/" "out-cn/")
-(翻译文件夹-中->英 "src-cn/" "out-en/")
-```
-
-命令行：
-
-```bash
-racket translator.rkt input.rkt -o output.rkt --en-to-cn
-racket translator.rkt --gen-data          # 重新生成翻译数据
-racket translator.rkt --update-tests      # 自动更新测试用例
-racket translator.rkt --dir src/ out/     # 递归翻译目录
-```
-
 ## 注意事项
 
 - 宏定义用 `定义语法` + `语法匹配`，`定义语法规则` 改名后模块层不识别
 - `语法规则` 只能在 `(定义语法 name (语法规则 ...))` 直用 form 下工作
 - Phase-1 中文绑定（`语法匹配`、`函数`、`如果` 等 32 个）已通过 `main.rkt`（30 个）和 `stxparam.rkt`（2 个）的 `rename-define/for-syntax` 提供，和 `(require (for-syntax racket/base))` 对称
-- 映射表由 `translator.rkt` 自动扫描源文件生成，添加新模块后运行 `racket translator.rkt --gen-data` 即可
 
 ## 覆盖
 

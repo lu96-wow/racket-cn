@@ -19,4 +19,4 @@
 
 (define build-deps '())
 
-(define auto-tests '("test-translator.rkt"))
+(define auto-tests '())

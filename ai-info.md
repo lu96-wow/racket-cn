@@ -106,8 +106,6 @@
 | `racket.rkt` | `(require racket-cn/racket)` 入口 | 透传 racket/main.rkt |
 | `module.rkt` | require/provide 顶层及其子形式 | 方式2 (define-syntax) |
 | `kw.rkt` | `定义-关键字函数` 宏实现 | —（基础设施） |
-| `translator.rkt` | 中英双向翻译器 | —（工具） |
-| `translator-data.rkt` | 翻译映射数据 | 由 translator 自动生成 |
 
 ### racket/ 子模块文件
 
@@ -155,10 +153,9 @@
 2. 无论哪种方式，文件头部添加 `(require "<相对路径>/rename-macro.rkt")`
 3. 在 `racket/main.rkt` 的 `require` 列表按字母序添加 `"xxx.rkt"`
 4. 在 `racket/main.rkt` 的 `provide` 列表按字母序添加 `(all-from-out "xxx.rkt")`
-5. 重新生成翻译数据：`racket translator.rkt --gen-data`
 
 ## 六、测试
 
 - `test-lang.rkt` — `#lang racket-cn` 冒烟测试
-- `test-translator.rkt` — 翻译器测试
-- 添加新绑定后两条都要跑
+- `test-all.rkt` — 全面功能测试
+- 添加新绑定后运行测试验证
