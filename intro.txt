@@ -1,0 +1,82 @@
+racket-cn: four translation approaches, each chosen for a specific reason.
+Are these the right choices? Any hidden problems?
+
+1. rename-define — normal bindings
+
+   Problem: identifiers like define, lambda, if need Chinese aliases.
+   Solution: a macro that expands to (provide (rename-out [eng cn] ...)).
+   ```racket
+   (rename-define [define 定义] [lambda 函数] [if 如果] [let 令] ...)
+   ```
+   Why rename-out: it creates a binding that the expander resolves at the
+   normal Binding phase, so free-identifier=? matches both forms.
+   Also works with for-syntax for phase-1 bindings:
+   ```racket
+   (rename-define/for-syntax
+     [syntax-case 语法匹配] [with-syntax 带语法] ...)
+   ```
+   Is this correct? rename-out pairs are generated independently per
+   submodule — can identical Chinese names from different modules
+   (e.g. both exporting a "映射" alias for different English originals)
+   collide when imported together? Does for-syntax correctly propagate
+   through nested macro expansions?
+
+2. make-rename-transformer — require/provide sub-forms
+
+   Problem: only-in, all-from-out, for-syntax etc. are sub-forms that
+   the expander matches by transformer property, not by binding.
+   Solution: local define-syntax bindings preserve the property.
+   ```racket
+   (define-syntax 仅导入   (make-rename-transformer #'only-in))
+   (define-syntax 全导出   (make-rename-transformer #'all-from-out))
+   (define-syntax 编译期   (make-rename-transformer #'for-syntax))
+   ```
+   Why not rename-out: these sub-forms carry prop:require-transformer
+   and prop:provide-transformer. rename-out drops these across module
+   boundaries — the exported alias becomes a plain identifier without
+   the transformer property. Only local define-syntax preserves them.
+   Is this correct? Does free-identifier=? always resolve the Chinese
+   alias to the original sub-form, even in nested require specs or
+   inside macro-generated require forms?
+
+3. 定义-关键字函数 — keyword arguments
+
+   Problem: keywords (#:exists, #:mode) are not identifiers — they are
+   a distinct syntactic category. rename-out cannot rename them.
+   Solution: a compile-time macro that pattern-matches Chinese keywords
+   in the argument list and rewrites the entire call to English.
+   ```racket
+   (定义-关键字函数 写入到文件 write-to-file
+     (#:如果存在 #:exists (截断 truncate) (替换 replace)))
+   ```
+   The macro walks arguments via syntax->datum, matches keyword->keyword
+   and (keyword + quoted-symbol)->(keyword + quoted-symbol) pairs, then
+   produces a new syntax object with English names.
+   Is this correct? syntax->datum on arguments means computed keyword
+   values (not literal quotes) are silently passed through untranslated.
+   Is there a safer way that preserves syntax objects throughout?
+   Also — should this macro expand to the English call directly, or
+   should it defer to a runtime wrapper?
+
+4. translator — bidirectional source conversion
+
+   Problem: users want to convert existing .rkt files between English
+   and Chinese Racket.
+   Solution: read the file into syntax objects, recursively walk the
+   tree replacing identifiers/keywords/module-paths/#lang, then
+   pretty-write back.
+   ```racket
+   (en-to-cn "src.rkt" "out.rkt")
+   (cn-to-en-folder "src/" "out/")
+   ```
+   Why read/pretty-write: structural translation avoids false matches
+   inside strings and comments.
+   Is this correct? The tradeoff is that read + pretty-write strips all
+   comments and original formatting. Is there a better approach that
+   preserves these — e.g. a syntax-property-based source location
+   tracker, or a string-level scanner with reader-awareness?
+
+Finally: require and define-syntax-rule are consumed by the expander
+at Module-begin, before rename bindings exist. We declare them
+untranslatable. Is that the only answer, or has anyone worked around
+this — perhaps with a custom reader that preprocesses the syntax tree?
