@@ -3,5 +3,5 @@
 (require "../rename-macro.rkt")
 
 (rename-define
-  [get-info 获取信息]
+  [get-info 获取-信息]
 )

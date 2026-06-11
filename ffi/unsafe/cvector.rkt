@@ -10,5 +10,5 @@
   [cvector-set! C向量-设置!]
   [cvector-type C向量-类型]
   [cvector-ptr C向量-指针]
-  [make-cvector 制造C向量]
+  [make-cvector 制造-C向量]
 )

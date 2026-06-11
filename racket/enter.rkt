@@ -4,5 +4,5 @@
 
 (rename-define
   [enter! 进入!]
-  [dynamic-enter! 动态进入!]
+  [dynamic-enter! 动态-进入!]
 )

@@ -32,9 +32,9 @@
   [treelist-sort 树列表-排序]
   [treelist-flatten 树列表-展平]
   [treelist-sublist 树列表-子列表]
-  [make-treelist 制造树列表]
-  [empty-treelist 空树列表]
-  [in-treelist 在树列表]
+  [make-treelist 制造-树列表]
+  [empty-treelist 空-树列表]
+  [in-treelist 在-树列表]
   [for/treelist 循环/树列表]
   [for*/treelist 循环*/树列表]
 )

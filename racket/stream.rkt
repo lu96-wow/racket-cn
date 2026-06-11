@@ -10,7 +10,7 @@
   [stream-rest 流-剩余]
   [stream-ref 流-引用]
   [stream->list 流->列表]
-  [in-stream 在流]
+  [in-stream 在-流]
   [stream-map 流-映射]
   [stream-filter 流-过滤]
   [stream-fold 流-折叠]

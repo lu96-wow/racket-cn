@@ -12,7 +12,7 @@
   [define/private 定义/私有]
   [define/override 定义/覆写]
   [field 字段]
-  [init-field 初始字段]
+  [init-field 初始-字段]
   [inherit 继承]
   [super 父类]
   [this 自身]

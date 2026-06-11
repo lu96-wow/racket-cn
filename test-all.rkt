@@ -28,23 +28,23 @@
 (printf "4. 关键字: ~a\n" (文件->字符串 "/tmp/ck3.txt"))
 
 ;; 5. 宏 — syntax-case phase-1
-(定义语法 (my-or stx)
-  (语法匹配 stx ()
+(定义-语法 (my-or stx)
+  (语法-匹配 stx ()
     [(_) #'#f]
     [(_ a) #'a]
     [(_ a b ...) #'(令 ([t a]) (如果 t t (my-or b ...)))]))
 (printf "5. 宏-syntax-case: ~a\n" (my-or #f #f 42 #f))
 
 ;; 6. 宏 — with-syntax phase-1
-(定义语法 (add1-macro stx)
-  (语法匹配 stx () [(_ x) (带语法 ([y #'(+ x 1)]) #'y)]))
+(定义-语法 (add1-macro stx)
+  (语法-匹配 stx () [(_ x) (带-语法 ([y #'(+ x 1)]) #'y)]))
 (printf "6. 宏-with-syntax: ~a\n" (add1-macro 41))
 
 ;; 7. for 系列
 (printf "7. for: /list=~a /fold=~a /and=~a\n"
-  (循环/列表 ([i (在范围 3)]) i)
-  (循环/折叠 ([s 0]) ([i (在范围 4)]) (+ s i))
-  (循环/且 ([i (在范围 1 4)]) (> i 0)))
+  (循环/列表 ([i (在-范围 3)]) i)
+  (循环/折叠 ([s 0]) ([i (在-范围 4)]) (+ s i))
+  (循环/且 ([i (在-范围 1 4)]) (> i 0)))
 
 ;; 8. 向量/哈希
 (定义 v (向量 1 2 3))
@@ -67,22 +67,22 @@
 
 ;; 12. 异常
 (定义 exn-result
-  (处理异常 ([exn:fail? (函数 (e) "caught")])
+  (带-处理器 ([exn:fail? (函数 (e) "caught")])
     (引发 (错误 "boom"))))
 (printf "12. 异常: ~a\n" exn-result)
 
 ;; 13. 参数
-(定义 pp (制造参数 0))
+(定义 pp (制造-参数 0))
 (参数化 ([pp 77]) (printf "13. 参数: 参数化=~a " pp))
 (printf "恢复=~a\n" (pp))
 
 ;; 14. 盒/赋值
 (定义 bx (盒 10))
-(盒赋值！ bx 20)
+(盒-赋值！ bx 20)
 (printf "14. 盒: ~a\n" (开盒 bx))
 
 ;; 15. 多值
-(定义多值 (a b) (多值 1 2))
+(定义-多值 (a b) (多值 1 2))
 (printf "15. 多值: ~a ~a\n" a b)
 
 ;; 16. 类型谓词
@@ -90,13 +90,13 @@
   (对? (对 1 2)) (空值? '()) (数字? 42) (布尔? #f))
 
 ;; 17. 文件/路径
-(printf "17. 路径: ~a\n" (构建路径 "/tmp" "test"))
+(printf "17. 路径: ~a\n" (构建-路径 "/tmp" "test"))
 
 ;; 18. 自由/绑定标识符等同 (phase-1)
-(定义语法 (id-eq stx)
-  (语法匹配 stx ()
+(定义-语法 (id-eq stx)
+  (语法-匹配 stx ()
     [(_ a b)
-     (if (自由标识符等同? #'a #'b)
+     (if (自由-标识符-等同? #'a #'b)
        #'"eq" #'"neq")]))
 (printf "18. id: free-id=?=~a\n" (id-eq x x))
 

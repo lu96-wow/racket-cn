@@ -3,5 +3,5 @@
 (require "../rename-macro.rkt")
 
 (rename-define
-  [read-eval-print-loop 读取求值打印循环]
+  [read-eval-print-loop 读取-求值-打印-循环]
 )

@@ -15,6 +15,6 @@
   [tcp-addresses TCP-地址]
   [tcp-abandon-port TCP-放弃端口]
   [tcp-port? TCP-端口?]
-  [port-number? 端口号?]
-  [listen-port-number? 监听端口号?]
+  [port-number? 端口-号?]
+  [listen-port-number? 监听-端口-号?]
 )

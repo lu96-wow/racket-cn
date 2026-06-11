@@ -3,6 +3,6 @@
 (require "../rename-macro.rkt")
 
 (rename-define
-  [lazy-require 延迟引用]
-  [lazy-require-syntax 延迟引用语法]
+  [lazy-require 延迟-引用]
+  [lazy-require-syntax 延迟-引用-语法]
 )

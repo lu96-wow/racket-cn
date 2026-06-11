@@ -29,11 +29,11 @@
 (rename-define
     ;; ========== 核心特殊形式 ==========
   [define 定义]
-  [define-syntax 定义语法]
-  [define-syntax-rule 定义语法规则]
-  [define-values 定义多值]
+  [define-syntax 定义-语法]
+  [define-syntax-rule 定义-语法-规则]
+  [define-values 定义-多值]
   [lambda 函数]
-  [case-lambda 分支函数]
+  [case-lambda 分支-函数]
   [if 如果]
   [cond 条件]
   [else 否则]
@@ -41,9 +41,9 @@
   [let 令]
   [let* 依次令]
   [letrec 递归令]
-  [let-values 令多值]
-  [let*-values 依次令多值]
-  [letrec-values 递归令多值]
+  [let-values 令-多值]
+  [let*-values 依次令-多值]
+  [letrec-values 递归令-多值]
   [set! 赋值！]
   [begin 顺序求值]
   [begin0 顺序求值返回首个值]
@@ -68,7 +68,7 @@
   [dynamic-wind 动态-包裹]
   [raise 引发]
   [error 错误]
-  [with-handlers 处理异常]
+  [with-handlers 带-处理器]
       ;; ========== 布尔 ==========
   [boolean? 布尔?]
       ;; ========== 对与列表 ==========
@@ -97,7 +97,7 @@
   [filter 过滤]
   [foldl 左折叠]
   [foldr 右折叠]
-  [for-each 遍历]
+  [for-each 对-每个]
   [apply 应用]
   [compose 函数组合]
   [compose1 函数组合1]
@@ -150,7 +150,7 @@
   [string=? 字符串=?]
   [string<? 字符串<?]
   [string>? 字符串>?]
-  [string-ci=? 字符串忽略大小写=?]
+  [string-ci=? 字符串-忽略大小写=?]
   [string-downcase 字符串-小写]
   [string-upcase 字符串-大写]
   [string-titlecase 字符串-首字母大写]
@@ -168,7 +168,7 @@
       ;; ========== 符号 ==========
   [symbol? 符号?]
   [gensym 生成唯一符号]
-  [generate-temporaries 生成临时标识符]
+  [generate-temporaries 生成-临时-标识符]
       ;; ========== 关键字 ==========
   [keyword? 关键字?]
   [keyword->string 关键字->字符串]
@@ -179,7 +179,7 @@
   [vector-ref 向量-引用]
   [vector-set! 向量-赋值！]
   [vector-length 向量-长度]
-  [make-vector 制造向量]
+  [make-vector 制造-向量]
   [vector->list 向量->列表]
   [list->vector 列表->向量]
   [vector-fill! 向量-填充！]
@@ -188,7 +188,7 @@
   [bytes? 字节串?]
   [bytes-ref 字节串-引用]
   [bytes-length 字节串-长度]
-  [make-bytes 制造字节串]
+  [make-bytes 制造-字节串]
   [bytes-append 字节串-拼接]
   [bytes-copy 字节串-复制]
       ;; ========== 哈希表 ==========
@@ -202,22 +202,22 @@
   [hash-values 哈希-值]
   [hash->list 哈希->列表]
   [hash-copy 哈希-复制]
-  [make-hash 制造哈希]
+  [make-hash 制造-哈希]
   [hasheq 哈希等同]
   [hasheqv 哈希等价]
       ;; ========== 盒 ==========
   [box 盒]
   [box? 盒?]
   [unbox 开盒]
-  [set-box! 盒赋值！]
-  [box-immutable 不可变盒]
+  [set-box! 盒-赋值！]
+  [box-immutable 盒-不可变]
       ;; ========== 参数 ==========
-  [make-parameter 制造参数]
+  [make-parameter 制造-参数]
   [parameterize 参数化]
-  [current-input-port 当前输入端口]
-  [current-output-port 当前输出端口]
-  [current-error-port 当前错误端口]
-  [current-directory 当前目录]
+  [current-input-port 当前-输入-端口]
+  [current-output-port 当前-输出-端口]
+  [current-error-port 当前-错误-端口]
+  [current-directory 当前-目录]
       ;; ========== 输入输出 ==========
   [display 显示]
   [displayln 显示行]
@@ -232,34 +232,34 @@
   [read-char 读取-字符]
   [peek-char 窥视-字符]
   [newline 换行]
-  [open-input-string 打开输入字符串]
-  [open-output-string 打开输出字符串]
-  [close-input-port 关闭输入端口]
-  [close-output-port 关闭输出端口]
+  [open-input-string 打开-输入-字符串]
+  [open-output-string 打开-输出-字符串]
+  [close-input-port 关闭-输入-端口]
+  [close-output-port 关闭-输出-端口]
   [port? 端口?]
-  [input-port? 输入端口?]
-  [output-port? 输出端口?]
+  [input-port? 输入-端口?]
+  [output-port? 输出-端口?]
   [eof 文件尾]
-  [eof-object? 文件尾?]
+  [eof-object? 文件尾-对象?]
       ;; ========== 文件系统 ==========
-  [file-exists? 文件存在?]
-  [directory-exists? 目录存在?]
-  [delete-file 删除文件]
-  [make-directory 创建目录]
-  [copy-file 复制文件]
+  [file-exists? 文件-存在?]
+  [directory-exists? 目录-存在?]
+  [delete-file 删除-文件]
+  [make-directory 创建-目录]
+  [copy-file 复制-文件]
   [path? 路径?]
   [path->string 路径->字符串]
-  [find-system-path 查找系统路径]
-  [build-path 构建路径]
-  [raise-argument-error 引发参数错误]
-  [raise-syntax-error 引发语法错误]
+  [find-system-path 查找-系统-路径]
+  [build-path 构建-路径]
+  [raise-argument-error 引发-参数-错误]
+  [raise-syntax-error 引发-语法-错误]
       ;; ========== 线程 ==========
   [thread? 线程?]
   [sleep 睡眠]
-  [kill-thread 终止线程]
-  [current-thread 当前线程]
-  [break-thread 中断线程]
-  [make-semaphore 制造信号量]
+  [kill-thread 终止-线程]
+  [current-thread 当前-线程]
+  [break-thread 中断-线程]
+  [make-semaphore 制造-信号量]
   [semaphore-post 信号量-发送]
   [semaphore-wait 信号量-等待]
       ;; ========== 结构 ==========
@@ -270,31 +270,31 @@
   [exn? 异常?]
   [raise 引发]
   [error 错误]
-  [with-handlers 处理异常]
+  [with-handlers 带-处理器]
       ;; ========== 宏/语法 ==========
   [identifier? 标识符?]
   [syntax->datum 语法->数据]
   [datum->syntax 数据->语法]
-  [syntax-rules 语法规则]
-  [syntax-case 语法匹配]
-  [with-syntax 带语法]
-  [begin-for-syntax 编译期开始]
-  [define-for-syntax 编译期定义]
-  [syntax-e 语法值]
+  [syntax-rules 语法-规则]
+  [syntax-case 语法-匹配]
+  [with-syntax 带-语法]
+  [begin-for-syntax 编译期-开始]
+  [define-for-syntax 编译期-定义]
+  [syntax-e 语法-值]
   [syntax->list 语法->列表]
   [syntax-source 语法-源]
   [syntax-line 语法-行]
   [syntax-column 语法-列]
   [syntax-position 语法-位置]
-  [free-identifier=? 自由标识符等同?]
-  [bound-identifier=? 绑定标识符等同?]
-  [identifier-binding 标识符绑定]
-  [let-syntax 令语法]
-  [letrec-syntax 递归令语法]
-  [let-syntaxes 令语法多]
-  [letrec-syntaxes 递归令语法多]
-  [local-expand 局部展开]
-  [make-rename-transformer 制造重名转换器]
+  [free-identifier=? 自由-标识符-等同?]
+  [bound-identifier=? 绑定-标识符-等同?]
+  [identifier-binding 标识符-绑定]
+  [let-syntax 令-语法]
+  [letrec-syntax 递归令-语法]
+  [let-syntaxes 令-语法-多]
+  [letrec-syntaxes 递归令-语法-多]
+  [local-expand 局部-展开]
+  [make-rename-transformer 制造-重命名-转换器]
       ;; ========== 迭代/循环 ==========
   [for 循环]
   [for* 循环*]
@@ -312,43 +312,43 @@
   [for*/last 循环*/末个]
   [for/fold 循环/折叠]
   [for*/fold 循环*/折叠]
-  [for-each 遍历]
-  [in-range 在范围]
-  [in-list 在列表]
-  [in-vector 在向量]
-  [in-string 在字符串]
-  [in-bytes 在字节串]
-  [in-hash 在哈希]
-  [in-naturals 在自然数]
-  [in-port 在端口]
+  [for-each 对-每个]
+  [in-range 在-范围]
+  [in-list 在-列表]
+  [in-vector 在-向量]
+  [in-string 在-字符串]
+  [in-bytes 在-字节串]
+  [in-hash 在-哈希]
+  [in-naturals 在-自然数]
+  [in-port 在-端口]
       ;; ========== 多值 ==========
-  [define-values 定义多值]
-  [let-values 令多值]
-  [let*-values 依次令多值]
+  [define-values 定义-多值]
+  [let-values 令-多值]
+  [let*-values 依次令-多值]
   [call-with-values 调用-多值]
   [values 多值]
       ;; ========== 命名空间 ==========
-  [dynamic-require 动态引用]
-  [current-namespace 当前命名空间]
-  [make-base-namespace 制造基础命名空间]
-  [namespace-variable-value 命名空间-变量值]
+  [dynamic-require 动态-引用]
+  [current-namespace 当前-命名空间]
+  [make-base-namespace 制造-基础-命名空间]
+  [namespace-variable-value 命名空间-变量-值]
       ;; ========== 系统 ==========
   [exit 退出]
-  [collect-garbage 垃圾回收]
+  [collect-garbage 回收-垃圾]
   [version 版本]
-  [current-milliseconds 当前毫秒]
-  [current-seconds 当前秒]
+  [current-milliseconds 当前-毫秒]
+  [current-seconds 当前-秒]
       ;; ========== 类型谓词 ==========
   [void 空]
   [void? 空?]
 )
 ;; 4. 关键字函数中文包装（宏翻译 #:如果存在 → #:exists 等）
 ;; ============================================================
-(定义-关键字函数 打开输入文件 open-input-file
+(定义-关键字函数 打开-输入-文件 open-input-file
           (#:模式 #:mode (二进制 binary) (文本 text))
           (#:为模块? #:for-module?))
 
-(定义-关键字函数 打开输出文件 open-output-file
+(定义-关键字函数 打开-输出-文件 open-output-file
           (#:如果存在 #:exists (错误 error) (截断 truncate) (替换 replace)
            (追加 append) (更新 update) (可更新 can-update)
            (必须截断 must-truncate) (截断或替换 truncate/replace))
@@ -356,7 +356,7 @@
           (#:权限 #:permissions)
           (#:替换权限? #:replace-permissions?))
 
-(定义-关键字函数 打开输入输出文件 open-input-output-file
+(定义-关键字函数 打开-输入-输出-文件 open-input-output-file
           (#:如果存在 #:exists (错误 error) (截断 truncate) (替换 replace)
            (追加 append) (更新 update) (可更新 can-update)
            (必须截断 must-truncate) (截断或替换 truncate/replace))
@@ -364,10 +364,10 @@
           (#:权限 #:permissions)
           (#:替换权限? #:replace-permissions?))
 
-(定义-关键字函数 调用-输入文件 call-with-input-file
+(定义-关键字函数 调用-输入-文件 call-with-input-file
           (#:模式 #:mode (二进制 binary) (文本 text)))
 
-(定义-关键字函数 调用-输出文件 call-with-output-file
+(定义-关键字函数 调用-输出-文件 call-with-output-file
           (#:如果存在 #:exists (错误 error) (截断 truncate) (替换 replace)
            (追加 append) (更新 update) (可更新 can-update)
            (必须截断 must-truncate) (截断或替换 truncate/replace))
@@ -375,10 +375,10 @@
           (#:权限 #:permissions)
           (#:替换权限? #:replace-permissions?))
 
-(定义-关键字函数 调用-输入文件* call-with-input-file*
+(定义-关键字函数 调用-输入-文件* call-with-input-file*
           (#:模式 #:mode (二进制 binary) (文本 text)))
 
-(定义-关键字函数 调用-输出文件* call-with-output-file*
+(定义-关键字函数 调用-输出-文件* call-with-output-file*
           (#:如果存在 #:exists (错误 error) (截断 truncate) (替换 replace)
            (追加 append) (更新 update) (可更新 can-update)
            (必须截断 must-truncate) (截断或替换 truncate/replace))
@@ -386,10 +386,10 @@
           (#:权限 #:permissions)
           (#:替换权限? #:replace-permissions?))
 
-(定义-关键字函数 以文件输入 with-input-from-file
+(定义-关键字函数 以-文件-输入 with-input-from-file
           (#:模式 #:mode (二进制 binary) (文本 text)))
 
-(定义-关键字函数 以文件输出 with-output-to-file
+(定义-关键字函数 以-文件-输出 with-output-to-file
           (#:如果存在 #:exists (错误 error) (截断 truncate) (替换 replace)
            (追加 append) (更新 update) (可更新 can-update)
            (必须截断 must-truncate) (截断或替换 truncate/replace))
@@ -401,6 +401,6 @@
           (#:池 #:pool (独自 own))
           (#:保留 #:keep (结果 results)))
 
-(provide 打开输入文件 打开输出文件 打开输入输出文件
-         调用-输入文件 调用-输出文件 调用-输入文件* 调用-输出文件*
-         以文件输入 以文件输出 线程)
+(provide 打开-输入-文件 打开-输出-文件 打开-输入-输出-文件
+         调用-输入-文件 调用-输出-文件 调用-输入-文件* 调用-输出-文件*
+         以-文件-输入 以-文件-输出 线程)

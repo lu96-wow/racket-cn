@@ -17,8 +17,8 @@
   [file->list 文件->列表]
   [file->value 文件->值]
   [file->bytes-lines 文件->字节行]
-  [find-files 查找文件]
-  [make-temporary-file 制造临时文件]
+  [find-files 查找-文件]
+  [make-temporary-file 制造-临时-文件]
 )
 
 ;; 关键字函数

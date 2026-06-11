@@ -5,8 +5,8 @@
 (rename-define
   [json-null JSON-空值]
   [jsexpr? JSON表达式?]
-  [write-json 写出JSON]
-  [read-json 读取JSON]
+  [write-json 写出-JSON]
+  [read-json 读取-JSON]
   [jsexpr->string JSON表达式->字符串]
   [jsexpr->bytes JSON表达式->字节串]
   [string->jsexpr 字符串->JSON表达式]

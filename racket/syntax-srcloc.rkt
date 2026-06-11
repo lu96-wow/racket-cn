@@ -3,5 +3,5 @@
 (require "../rename-macro.rkt")
 
 (rename-define
-  [syntax-srcloc 语法源位置]
+  [syntax-srcloc 语法-源-位置]
 )

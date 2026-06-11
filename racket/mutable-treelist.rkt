@@ -3,8 +3,8 @@
 (require "../rename-macro.rkt")
 
 (rename-define
-  [mutable-treelist 可变树列表]
-  [mutable-treelist? 可变树列表?]
+  [mutable-treelist 可变-树列表]
+  [mutable-treelist? 可变-树列表?]
   [mutable-treelist-empty? 可变树列表-空?]
   [mutable-treelist-length 可变树列表-长度]
   [mutable-treelist-ref 可变树列表-引用]
@@ -30,8 +30,8 @@
   [mutable-treelist-sublist! 可变树列表-子列表!]
   [mutable-treelist-snapshot 可变树列表-快照]
   [mutable-treelist-copy 可变树列表-复制]
-  [make-mutable-treelist 制造可变树列表]
-  [in-mutable-treelist 在可变树列表]
-  [for/mutable-treelist 循环/可变树列表]
-  [for*/mutable-treelist 循环*/可变树列表]
+  [make-mutable-treelist 制造-可变-树列表]
+  [in-mutable-treelist 在-可变-树列表]
+  [for/mutable-treelist 循环/可变-树列表]
+  [for*/mutable-treelist 循环*/可变-树列表]
 )

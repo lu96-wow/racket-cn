@@ -8,7 +8,7 @@
   [seconds->date 秒->日期]
   [date->seconds 日期->秒]
   [date-display-format 日期-显示格式]
-  [find-seconds 查找秒]
+  [find-seconds 查找-秒]
   [date* 日期*]
-  [current-date 当前日期]
+  [current-date 当前-日期]
 )

@@ -4,5 +4,5 @@
 
 (rename-define
   [random-seed 随机-种子]
-  [crypto-random-bytes 加密随机字节]
+  [crypto-random-bytes 加密-随机-字节]
 )

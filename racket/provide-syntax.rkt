@@ -3,5 +3,5 @@
 (require "../rename-macro.rkt")
 
 (rename-define
-  [define-provide-syntax 定义提供语法]
+  [define-provide-syntax 定义-提供-语法]
 )

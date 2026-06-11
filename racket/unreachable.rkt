@@ -3,5 +3,5 @@
 (require "../rename-macro.rkt")
 
 (rename-define
-  [with-assert-unreachable 带断言不可达]
+  [with-assert-unreachable 带-断言-不可达]
 )

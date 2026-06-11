@@ -3,6 +3,6 @@
 (require "../rename-macro.rkt")
 
 (rename-define
-  [command-line 命令行]
-  [parse-command-line 解析命令行]
+  [command-line 命令-行]
+  [parse-command-line 解析-命令-行]
 )

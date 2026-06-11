@@ -3,5 +3,5 @@
 (require "../rename-macro.rkt")
 
 (rename-define
-  [dynamic-rerequire 动态重引用]
+  [dynamic-rerequire 动态-重引用]
 )
