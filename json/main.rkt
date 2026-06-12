@@ -3,10 +3,10 @@
 (require "../rename-macro.rkt")
 
 (rename-define
-  [json-null JSON-空值]
+  [json-null json-空值]
   [jsexpr? JSON表达式?]
-  [write-json 写出-JSON]
-  [read-json 读取-JSON]
+  [write-json 写出-json]
+  [read-json 读取-json]
   [jsexpr->string JSON表达式->字符串]
   [jsexpr->bytes JSON表达式->字节串]
   [string->jsexpr 字符串->JSON表达式]

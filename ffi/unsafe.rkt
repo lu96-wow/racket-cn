@@ -116,12 +116,12 @@
   [union-ref 联合-引用]
   [union-set! 联合-设置!]
      ;; ── FFI 库 ──
-  [ffi-lib FFI-库]
-  [ffi-lib? FFI-库?]
-  [ffi-lib-name FFI库-名称]
-  [get-ffi-obj 获取-FFI-对象]
-  [ffi-obj-ref FFI对象-引用]
-  [set-ffi-obj! 设置-FFI-对象!]
+  [ffi-lib ffi-库]
+  [ffi-lib? ffi-库?]
+  [ffi-lib-name ffi库-名称]
+  [get-ffi-obj 获取-ffi-对象]
+  [ffi-obj-ref ffi对象-引用]
+  [set-ffi-obj! 设置-ffi-对象!]
   [lookup-errno 查找-错误号]
   [saved-errno 保存-错误号]
      ;; ── 函数 ──
