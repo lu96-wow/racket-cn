@@ -7,7 +7,10 @@
          en-to-cn
          cn-to-en
          en-to-cn-folder
-         cn-to-en-folder)
+         cn-to-en-folder
+         en->cn-list
+         cn->en-list
+         query-mapping)
 
 ;; ── 更新映射表 ──────────────────────────────────────────
 

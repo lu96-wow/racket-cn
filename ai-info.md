@@ -1,4 +1,4 @@
-# racket-cn 翻译方式与文件总览
+# racket-cn 翻译方式、文件总览与已知限制
 
 > 记录项目中使用的所有翻译方式、各自适用场景、以及每个文件使用了哪种方式。
 
@@ -154,7 +154,35 @@
 3. 在 `racket/main.rkt` 的 `require` 列表按字母序添加 `"xxx.rkt"`
 4. 在 `racket/main.rkt` 的 `provide` 列表按字母序添加 `(all-from-out "xxx.rkt")`
 
-## 六、测试
+## 六、FFI（ffi/unsafe）——已删除
+
+**`racket-cn/ffi/` 目录已被删除**，原因如下：
+
+### 问题：`_fun` 宏无法重命名
+
+`ffi/unsafe` 中的 `_fun` 是一个**宏**（`define-syntax (_fun stx) ...`），而非普通函数。当我们用 `rename-define` 将其重命名为 `_函数` 后：
+
+1. `_fun` 宏在展开时会检查其参数是否为合法的 ctype 绑定
+2. 宏的内部机制（如 `syntax-local-value`）查找的是宏展开上下文中的绑定
+3. `rename-define` 生成的 `make-rename-transformer` 在宏展开上下文中无法正确将中文类型名（如 `_整数`）绑定回英文 ctype（`_int`）
+4. 结果：`(_函数 _整数 _整数 -> _空)` 报错 `_fun: missing output type`
+
+### 影响范围
+
+不只是 `_fun` 本身，所有需要作为 `_fun` 参数的 C 类型（`_int`, `_void`, `_pointer`, `_string` 等）也无法通过 `rename-define` 重命名后用于 `_fun` 中。
+
+### 解决方案
+
+用户在使用 FFI 时应直接使用英文原版 `ffi/unsafe`：
+
+```racket
+(require ffi/unsafe)
+;; 使用英文 _fun, _int, _void, _string, _pointer 等
+```
+
+其他 `racket-cn/ffi/unsafe/define` 等子模块也被一并删除。
+
+## 七、测试
 
 - `test-lang.rkt` — `#lang racket-cn` 冒烟测试
 - `test-all.rkt` — 全面功能测试

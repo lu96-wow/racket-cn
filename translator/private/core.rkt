@@ -10,7 +10,10 @@
 
 (provide translate-file
          translate-directory
-         load-mapping-hashes)
+         load-mapping-hashes
+         en->cn-list
+         cn->en-list
+         query-mapping)
 
 ;; ── 加载映射表 ──────────────────────────────────────────
 
@@ -72,12 +75,7 @@
           (if (member sub racket-submodules)
               (if cn->en? path (string->symbol (format "racket-cn/racket/~a" sub)))
               path))]
-    [(regexp-match #rx"^racket-cn/json$" s) (if cn->en? 'json path)]
-    [(regexp-match #rx"^racket-cn/ffi/(.+)$" s)
-     => (lambda (m) (if cn->en? (string->symbol (format "ffi/~a" (cadr m))) path))]
     [(string=? s "json") (if cn->en? path 'racket-cn/json)]
-    [(regexp-match #rx"^ffi/(.+)$" s)
-     => (lambda (m) (if cn->en? path (string->symbol (format "racket-cn/ffi/~a" (cadr m)))))]
     [else path]))
 
 ;; ── 核心翻译递归 ─────────────────────────────────────────
@@ -239,3 +237,28 @@
       (printf " (覆盖)"))
     (printf "\n")
     (translate-file full-in full-out #:direction dir #:confirm confirm-box)))
+
+;; ── 映射查询 ──────────────────────────────────────────
+
+(define (en->cn-list)
+  "返回英文→中文的所有映射，每项为 (list eng cn type source)。"
+  (call-with-input-file mapping-file
+    (λ (port) (read port))))
+
+(define (cn->en-list)
+  "返回中文→英文的所有映射，每项为 (list cn eng type source)。"
+  (for/list ([m (in-list (en->cn-list))])
+    (match m
+      [(list eng cn type src) (list cn eng type src)])))
+
+(define (query-mapping name)
+  "查询一个标识符（英文或中文）对应的翻译。
+   返回 (list 原名 译名 类型 来源文件)，未找到时返回 #f。
+   参数可以是符号或字符串。"
+  (define name-sym (if (symbol? name) name (string->symbol name)))
+  (for/or ([m (in-list (en->cn-list))])
+    (match m
+      [(list (? symbol? eng) (? symbol? cn) type src)
+       #:when (or (eq? eng name-sym) (eq? cn name-sym))
+       (list eng cn type src)]
+      [_ #f])))

@@ -2,8 +2,8 @@
 
 Racket 语言的中文版本。提供 `#lang racket-cn` 和 `#lang racket-cn/base`。
 
-覆盖 **~1380 条**中英文翻译对，涵盖 racket/base 核心、88 个 racket/ 子模块、
-json、FFI、module.rkt，以及中文关键字参数翻译。
+覆盖 **~1400 条**中英文翻译对，涵盖 racket/base 核心、88 个 racket/ 子模块、
+json、module.rkt，以及中文关键字参数翻译。
 
 ## 安装
 
@@ -77,7 +77,6 @@ rm -f $(raco link -s 2>/dev/null || echo ~/.local/share/racket/*/collects)/racke
 (require racket-cn/racket/math)  ;; 仅数学模块
 (require racket-cn/racket/tcp)   ;; TCP 网络
 (require racket-cn/json)         ;; JSON 中文别名
-(require racket-cn/ffi/unsafe)   ;; FFI 中文别名
 ```
 
 ### 快速开始
@@ -130,15 +129,24 @@ rm -f $(raco link -s 2>/dev/null || echo ~/.local/share/racket/*/collects)/racke
 
 > `require` 本体在模块顶层不能用 `引用` 替代（展开器时序限制），子 form 全部可用。
 
-### FFI
+### 映射查询
 
 ```racket
-(require racket-cn/ffi/unsafe)
+;; 查询英文对应的中文
+(query-mapping 'define)
+;; → '(define 定义 rename-define/for-syntax \".../main.rkt\")
 
-(分配内存 128)                              ; malloc
-(指针-引用 ptr 类型-整数 0)                  ; ptr-ref
-(FFI库 "libc")                              ; ffi-lib
+;; 查询中文对应的英文
+(query-mapping '打开-输入-无数据)
+;; → '(open-input-nowhere 打开-输入-无数据 rename-define \".../port.rkt\")
+
+;; 查看全部英文→中文映射
+(en->cn-list)
+
+;; 查看全部中文→英文映射
+(cn->en-list)
 ```
+
 ## 翻译器
 
 `racket-cn/translator` 提供双向翻译工具，可将英文 Racket 代码翻译为中文，反之亦然。
@@ -192,7 +200,7 @@ rm -f $(raco link -s 2>/dev/null || echo ~/.local/share/racket/*/collects)/racke
 | 标识符 | `define` ↔ `定义`, `lambda` ↔ `函数` |
 | 关键字 | `#:exists` ↔ `#:如果存在` |
 | 模块路径 | `racket/list` ↔ `racket-cn/racket/list` |
-| 特殊模块 | `json` ↔ `racket-cn/json`, `ffi/unsafe` ↔ `racket-cn/ffi/unsafe` |
+| 特殊模块 | `json` ↔ `racket-cn/json` |
 | require 子形式 | `only-in`, `prefix-in`, `for-syntax` 等保留结构，仅翻译路径 |
 
 > 字符串和数字原样保留，不会被翻译。
@@ -210,8 +218,7 @@ rm -f $(raco link -s 2>/dev/null || echo ~/.local/share/racket/*/collects)/racke
 | racket/base 核心 | 1 | 定义、函数、如果、令… + 关键字参数翻译 |
 | racket/* 子模块 | 88 | 对应 /usr/racket/collects/racket/*.rkt |
 | json | 1 | JSON 处理中文别名 |
-| ffi/unsafe | 6 | FFI 中文别名（malloc、ptr-ref…） |
 | module.rkt | 1 | require/provide 子 form 中文原语 |
-| **总计** | **~1380 条映射** | |
+| **总计** | **~1400 条映射** | |
 
 完整限制参考 [局限.md](局限.md)。
