@@ -60,10 +60,10 @@
   [syntax 语法]
       ;; ========== 续延与控制 ==========
   [call/cc 续延]
-  [call-with-current-continuation 调用-当前续延]
-  [call-with-composable-continuation 调用-可组合续延]
-  [call-with-escape-continuation 调用-逃逸续延]
-  [call-with-continuation-prompt 调用-续延提示]
+  [call-with-current-continuation 调用-当前-续延]
+  [call-with-composable-continuation 调用-可组合-续延]
+  [call-with-escape-continuation 调用-逃逸-续延]
+  [call-with-continuation-prompt 调用-续延-提示]
   [call-with-values 调用-多值]
   [dynamic-wind 动态-包裹]
   [raise 引发]
@@ -167,7 +167,7 @@
   [char-downcase 字符-小写]
       ;; ========== 符号 ==========
   [symbol? 符号?]
-  [gensym 生成唯一符号]
+  [gensym 生成-唯一-符号]
   [generate-temporaries 生成-临时-标识符]
       ;; ========== 关键字 ==========
   [keyword? 关键字?]
@@ -203,8 +203,8 @@
   [hash->list 哈希->列表]
   [hash-copy 哈希-复制]
   [make-hash 制造-哈希]
-  [hasheq 哈希等同]
-  [hasheqv 哈希等价]
+  [hasheq 哈希-等同]
+  [hasheqv 哈希-等价]
       ;; ========== 盒 ==========
   [box 盒]
   [box? 盒?]
@@ -222,7 +222,7 @@
   [display 显示]
   [displayln 显示行]
   [print 打印]
-  [println 打印行]
+  [println 打印-行]
   [write 写出]
   [printf 格式化输出]
   [read 读取]
@@ -239,7 +239,7 @@
   [port? 端口?]
   [input-port? 输入-端口?]
   [output-port? 输出-端口?]
-  [eof 文件尾]
+  [eof 文件-尾]
   [eof-object? 文件尾-对象?]
       ;; ========== 文件系统 ==========
   [file-exists? 文件-存在?]
